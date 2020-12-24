@@ -27,6 +27,7 @@ var playerX = 50;
 var playerY = 40;
 var playerYspeed = 0;
 var jumping = false;
+var inAir = false;
 
 // Event listeners
 window.addEventListener('keydown', onKeydown);
@@ -67,8 +68,9 @@ function update() {
     i = i+1;
     document.querySelector("#frameNum").innerHTML = i;
 
-    if(jumping) {
+    if(jumping && !inAir) {
         playerYspeed = -jumpPower;
+        inAir = true;
     }
 
     // Gravity
@@ -77,6 +79,7 @@ function update() {
     if(playerY > (floorY - playerHeight)) {
         playerY = floorY - playerHeight;
         playerYspeed = 0;
+        inAir = false;
     }
 
 }
