@@ -39,6 +39,9 @@ var inAir = false;
 var runningL = false;
 var runningR = false;
 
+var camX = 0;
+var camY = 0;
+
 // Event listeners
 window.addEventListener('keydown', onKeydown);
 window.addEventListener('keyup', onKeyup);
@@ -82,15 +85,16 @@ function update() {
     i = i+1;
     document.querySelector("#frameNum").innerHTML = i;
 
+    // Jumping
     if(jumping && !inAir) {
         playerYspeed = -jumpPower;
         inAir = true;
     }
 
+    // Update player movement
     if(runningL) {
         playerX = playerX - playerSpeed;
     }
-
     if(runningR) {
         playerX = playerX + playerSpeed;
     }
@@ -104,6 +108,12 @@ function update() {
         inAir = false;
     }
 
+    // Update viewport
+    camX = playerX - 150;
+
+    // Show coordinates
+    document.querySelector("#corX").innerHTML = playerX;
+    document.querySelector("#corY").innerHTML = playerY;
 }
 
 // DRAW
@@ -118,12 +128,15 @@ function draw() {
     c.fillRect(0, 0, canvasWidth, floorY - 40);
 
     // Draw backdrop
-    c.drawImage(background, 0, -210, bgWidth, bgHeight);
+    var backgroundX = - (camX % bgWidth);
+    c.drawImage(background, backgroundX, -210, bgWidth, bgHeight);
+    c.drawImage(background, backgroundX + bgWidth, -210, bgWidth, bgHeight);
+    c.drawImage(background, backgroundX - bgWidth, -210, bgWidth, bgHeight);
 
     // Draw ground
     c.fillStyle = 'limegreen';
     c.fillRect(0, floorY - 40, canvasWidth, canvasHeight - floorY + 40);
 
     // Draw player
-    c.drawImage(playerImage, playerX, playerY, playerWidth, playerHeight);
+    c.drawImage(playerImage, playerX - camX, playerY - camY, playerWidth, playerHeight);
 }
