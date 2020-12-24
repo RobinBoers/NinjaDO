@@ -87,7 +87,7 @@ var stop = false;
 // Event listeners
 window.addEventListener('keydown', onKeydown);
 window.addEventListener('keyup', onKeyup);
-window.addEventListener('load', start);
+// window.addEventListener('load', start);
 
 function start() {
     window.requestAnimationFrame(gameLoop);
@@ -186,7 +186,20 @@ function update() {
 
 // DRAW
 
-function draw() {
+function draw(state) {
+
+    var player = state.player;
+    var playerX = player.pos.x;
+    var playerY = player.pos.y;
+    var playerSpeed = player.velocity;
+    var moving = player.moving;
+    var lookingL = player.looking.l;
+    var lookingR = player.looking.r;
+    var playerHealth = player.hp;
+    var camX = player.pos.camX;
+    var camY = player.pos.camY;
+
+    console.log();
 
     // Save the non-flipped state to restore later
     c.save();
@@ -289,4 +302,22 @@ function draw() {
         c.font = '96px JetBrains Mono';
         c.fillText('G4me 0v3r!', 120, 300);
     }
+}
+
+const gameState = {
+	player: {
+		pos: {
+			x: 150,
+            y: -120,
+            camX: -300,
+            camY: -300,
+		}, 
+		looking: {
+			l: true,
+			r: false
+		},
+		velocity: 10,
+        moving: false,
+        hp: 1
+	}
 }
