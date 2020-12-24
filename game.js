@@ -21,9 +21,10 @@ const hackKeyCode = 59;
 var playerSpeed = 8;
 const superSpeed = 30;
 
-// Abilities
+// Abilities & Health
 const jumpKeyCode = 87;
 const jumpPower = 8;
+const maxPlayerHealth = 20;
 
 // Animated sprites
 const spriteFramesPerRow = 2;
@@ -67,6 +68,12 @@ var lookingR = true;
 var moving = false;
 var hacking = false;
 
+// Player health and abilities
+var playerHealth = maxPlayerHealth;
+var playerMana = 5;
+var gameOver = false;
+
+// Viewport
 var camX = 0;
 var camY = 0;
 
@@ -89,9 +96,15 @@ function start() {
 // GAME LOOP
 
 function gameLoop() {
+
+    // Overwrite to stop the game
     if (stop) return;
+
+    // Update and draw the frame
     update();
     draw();
+
+    // Request next frame
     window.requestAnimationFrame(gameLoop);
 }
 
@@ -123,7 +136,6 @@ function update() {
     // Simple frame count
     i = i+1;
     frameCounter = frameCounter + 1;
-    document.querySelector("#frameNum").innerHTML = i;
 
     // Superspeed for hackers
     // Is triggerd by the ; key
@@ -165,16 +177,10 @@ function update() {
         }
     }
 
-    // Show coordinates
-    document.querySelector("#corX").innerHTML = playerX;
-    document.querySelector("#corY").innerHTML = playerY;
-
-    // Show direction the player is 
-    // lookin at in HUD.
-    if(lookingL) {
-        document.querySelector("#dir").innerHTML = "L";
-    } else {
-        document.querySelector("#dir").innerHTML = "R";
+    // Check for gameover
+    if(playerHealth <= 0) {
+        gameOver = true;
+        stop = true;
     }
 }
 
@@ -256,5 +262,31 @@ function draw() {
             c.drawImage(stillPlayerImage, playerX - camX, playerY - camY, playerWidth, playerHeight);
         }
         
+    }
+
+    // Calculate cords
+    var cordX = Math.floor(playerX / 10);
+    var cordY = Math.floor(playerY / 10);
+
+    // Draw the cords in the topleft corner
+    c.fillStyle = "white";
+    c.font = '30px JetBrains Mono';
+    c.fillText("x:"+ cordX + ",y:" + cordY, 20, 40);
+
+    // Show framenum on the bottom right
+    c.fillText(i, 720, 600);
+
+    // Draw a healthbar
+    c.fillStyle = "tomato";
+    c.fillRect(400, 10, playerHealth / maxPlayerHealth *380, 20)
+
+    c.strokeStyle = "black";
+    c.strokeRect(400, 10, 380, 20);
+
+    // Draw Gameover screen when game is over (duh)
+    if(gameOver === true || stop === true) {
+        c.fillStyle = 'white';
+        c.font = '96px JetBrains Mono';
+        c.fillText('G4me 0v3r!', 120, 300);
     }
 }
