@@ -2,8 +2,8 @@
 
 const canvasWidth = 800;
 const canvasHeight = 600;
-const playerWidth = 181;
-const playerHeight = 229;
+const playerWidth = 60;
+const playerHeight = 70;
 const floorY = 540;
 
 // CONFIGURATION
@@ -15,7 +15,7 @@ canvas.height = canvasHeight;
 document.body.appendChild(canvas);
 var i = 0;
 
-var playerImage = new Image();
+var playerImage = new Image(playerWidth, playerHeight);
 playerImage.src = 'assets/player.png';
 
 var playerX = 50;
@@ -49,8 +49,10 @@ function update() {
 
 function draw() {
 
-    // Clear canvas
-    c.clearRect(0,0, canvasWidth, canvasHeight);
+    c.imageSmoothingEnabled = false;
+    c.mozImageSmoothingEnabled = false;
+    c.webkitImageSmoothingEnabled = false;
+
 
     // Draw player
     c.drawImage(playerImage, playerX, playerY);
