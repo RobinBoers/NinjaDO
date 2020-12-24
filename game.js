@@ -6,6 +6,8 @@ const bgWidth = 800;
 const bgHeight = 800;
 const playerWidth = 60;
 const playerHeight = 70;
+const playerImageW = 6;
+const playerImageH = 7;
 const floorY = 540;
 
 const playerYacceleration = 1;
@@ -16,6 +18,10 @@ const rightKeyCode = 68;
 const leftKeyCode = 65;
 const playerSpeed = 10;
 
+const spriteFramesPerRow = 2;
+const totalFrames = 2;
+const AnimationSpeed = 10;
+
 // CONFIGURATION
 
 var canvas = document.createElement('canvas');
@@ -25,8 +31,10 @@ canvas.height = canvasHeight;
 document.body.appendChild(canvas);
 var i = 0;
 
-var playerImage = new Image(playerWidth, playerHeight);
-playerImage.src = 'assets/player.png';
+var playerImage = new Image();
+playerImage.src = 'assets/playerSprites2.png';
+
+spriteFrameNum = 0;
 
 var background = new Image();
 background.src = 'assets/background.png';
@@ -38,9 +46,14 @@ var jumping = false;
 var inAir = false;
 var runningL = false;
 var runningR = false;
+var lookingL = false;
+var lookingR = true;
 
 var camX = 0;
 var camY = 0;
+
+var frameCounter = 0;
+var stop = false;
 
 // Event listeners
 window.addEventListener('keydown', onKeydown);
@@ -54,6 +67,7 @@ function start() {
 // GAME LOOP
 
 function gameLoop() {
+    if (stop) return;
     update();
     draw();
     window.requestAnimationFrame(gameLoop);
@@ -83,6 +97,7 @@ function update() {
 
     // Simple frame count
     i = i+1;
+    frameCounter = frameCounter + 1;
     document.querySelector("#frameNum").innerHTML = i;
 
     // Jumping
@@ -94,9 +109,13 @@ function update() {
     // Update player movement
     if(runningL) {
         playerX = playerX - playerSpeed;
+        lookingL = true;
+        lookingR = false;
     }
-    if(runningR) {
+    else if(runningR) {
         playerX = playerX + playerSpeed;
+        lookingR = true;
+        lookingL = false;
     }
 
     // Gravity
@@ -111,14 +130,31 @@ function update() {
     // Update viewport
     camX = playerX - 150;
 
+    // Update player animation
+
+    if((frameCounter % AnimationSpeed) === 0) {
+        spriteFrameNum = spriteFrameNum + 1;
+        if(spriteFrameNum >= totalFrames) {
+            spriteFrameNum = 0;
+        }
+    }
+
     // Show coordinates
     document.querySelector("#corX").innerHTML = playerX;
     document.querySelector("#corY").innerHTML = playerY;
+
+    if(lookingL) {
+        document.querySelector("#dir").innerHTML = "L";
+    } else {
+        document.querySelector("#dir").innerHTML = "R";
+    }
 }
 
 // DRAW
 
 function draw() {
+
+    c.save();
 
     c.imageSmoothingEnabled = false;
     c.webkitImageSmoothingEnabled = false;
@@ -127,7 +163,7 @@ function draw() {
     c.fillStyle = 'royalblue';
     c.fillRect(0, 0, canvasWidth, floorY - 40);
 
-    // Draw backdrop
+    // Draw the backdrop
     var backgroundX = - (camX % bgWidth);
     c.drawImage(background, backgroundX, -210, bgWidth, bgHeight);
     c.drawImage(background, backgroundX + bgWidth, -210, bgWidth, bgHeight);
@@ -137,6 +173,27 @@ function draw() {
     c.fillStyle = 'limegreen';
     c.fillRect(0, floorY - 40, canvasWidth, canvasHeight - floorY + 40);
 
-    // Draw player
-    c.drawImage(playerImage, playerX - camX, playerY - camY, playerWidth, playerHeight);
+    // Get correct sprite from spritesheet
+    var spritesRow = Math.floor(spriteFrameNum / spriteFramesPerRow);
+    var spritesCol = spriteFrameNum % spriteFramesPerRow;
+    var spriteX = spritesCol * playerImageW;
+    var spriteY = spritesRow * playerImageH;
+
+    // check for player direction, and flip the image the right way
+    if(lookingL) {
+
+        // Flip canvas
+        c.translate(canvasWidth, 0);
+        c.scale(-1, 1);
+        
+        // Draw the player
+        c.drawImage(playerImage, spriteX, spriteY, playerImageW, playerImageH, playerX + 450 - camX, playerY - camY, playerWidth, playerHeight);
+
+        // Remove flip
+        c.restore();
+
+    } else {
+        c.drawImage(playerImage, spriteX, spriteY, playerImageW, playerImageH, playerX - camX, playerY - camY, playerWidth, playerHeight);
+    }
+
 }
