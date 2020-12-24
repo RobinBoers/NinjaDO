@@ -6,6 +6,8 @@ const playerWidth = 60;
 const playerHeight = 70;
 const floorY = 540;
 
+const playerYacceleration = 1;
+
 // CONFIGURATION
 
 var canvas = document.createElement('canvas');
@@ -20,6 +22,7 @@ playerImage.src = 'assets/player.png';
 
 var playerX = 50;
 var playerY = 40;
+var playerYspeed = 0;
 
 window.addEventListener('load', start);
 
@@ -42,6 +45,14 @@ function update() {
     // Simple frame count
     i = i+1;
     console.log("Frame "+i);
+
+    // Gravity
+    playerY = playerY + playerYspeed;
+    playerYspeed = playerYspeed + playerYacceleration;
+    if(playerY > (floorY - playerHeight)) {
+        playerY = floorY - playerHeight;
+        playerYspeed = 0;
+    }
 
 }
 
