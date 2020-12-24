@@ -2,21 +2,18 @@
 
 const canvasWidth = 800;
 const canvasHeight = 600;
-const bgWidth = 800;
+const bgWidth = 1000;
 const bgHeight = 800;
 const playerWidth = 60;
 const playerHeight = 70;
 const playerImageW = 6;
 const playerImageH = 7;
-const floorY = 540;
 
-const playerYacceleration = 1;
-const jumpKeyCode = 87;
-const jumpPower = 15;
-
+const upKeyCode = 87;
+const downKeyCode = 83;
 const rightKeyCode = 68;
 const leftKeyCode = 65;
-const playerSpeed = 10;
+const playerSpeed = 8;
 
 const spriteFramesPerRow = 2;
 const totalFrames = 2;
@@ -34,6 +31,9 @@ var i = 0;
 var playerImage = new Image();
 playerImage.src = 'assets/playerSprites2.png';
 
+var stillPlayerImage = new Image();
+stillPlayerImage.src = 'assets/player.png';
+
 spriteFrameNum = 0;
 
 var background = new Image();
@@ -42,12 +42,13 @@ background.src = 'assets/background.png';
 var playerX = 50;
 var playerY = 40;
 var playerYspeed = 0;
-var jumping = false;
-var inAir = false;
+var runningU = false;
 var runningL = false;
 var runningR = false;
+var runningD = false;
 var lookingL = false;
 var lookingR = true;
+var moving = false;
 
 var camX = 0;
 var camY = 0;
@@ -78,7 +79,8 @@ function gameLoop() {
 function onKeydown(event) {
     console.log(event.keyCode);
 
-    if(event.keyCode === jumpKeyCode) jumping = true;
+    if(event.keyCode === upKeyCode) runningU = true;
+    if(event.keyCode === downKeyCode) runningD = true;
     if(event.keyCode === rightKeyCode) runningR = true;
     if(event.keyCode === leftKeyCode) runningL = true;
 }
@@ -86,7 +88,8 @@ function onKeydown(event) {
 function onKeyup(event) {
     console.log(event.keyCode);
 
-    if(event.keyCode === jumpKeyCode) jumping = false;
+    if(event.keyCode === upKeyCode) runningU = false;
+    if(event.keyCode === downKeyCode) runningD = false;
     if(event.keyCode === rightKeyCode) runningR = false;
     if(event.keyCode === leftKeyCode) runningL = false;
 }
@@ -100,13 +103,13 @@ function update() {
     frameCounter = frameCounter + 1;
     document.querySelector("#frameNum").innerHTML = i;
 
-    // Jumping
-    if(jumping && !inAir) {
-        playerYspeed = -jumpPower;
-        inAir = true;
-    }
-
     // Update player movement
+    if(runningU) {
+        playerY = playerY - playerSpeed;
+    }
+    if(runningD) {
+        playerY = playerY + playerSpeed;
+    }
     if(runningL) {
         playerX = playerX - playerSpeed;
         lookingL = true;
@@ -118,17 +121,12 @@ function update() {
         lookingL = false;
     }
 
-    // Gravity
-    playerY = playerY + playerYspeed;
-    playerYspeed = playerYspeed + playerYacceleration;
-    if(playerY > (floorY - playerHeight)) {
-        playerY = floorY - playerHeight;
-        playerYspeed = 0;
-        inAir = false;
-    }
+    if(runningR || runningD || runningL || runningU) moving = true;
+    else moving = false;
 
     // Update viewport
-    camX = playerX - 150;
+    camX = playerX - 300;
+    camY = playerY - 300;
 
     // Update player animation
 
@@ -159,19 +157,18 @@ function draw() {
     c.imageSmoothingEnabled = false;
     c.webkitImageSmoothingEnabled = false;
 
-    // Draw sky
-    c.fillStyle = 'royalblue';
-    c.fillRect(0, 0, canvasWidth, floorY - 40);
-
-    // Draw the backdrop
+    // Draw the scene
     var backgroundX = - (camX % bgWidth);
-    c.drawImage(background, backgroundX, -210, bgWidth, bgHeight);
-    c.drawImage(background, backgroundX + bgWidth, -210, bgWidth, bgHeight);
-    c.drawImage(background, backgroundX - bgWidth, -210, bgWidth, bgHeight);
-
-    // Draw ground
-    c.fillStyle = 'limegreen';
-    c.fillRect(0, floorY - 40, canvasWidth, canvasHeight - floorY + 40);
+    var backgroundY = - (camY % bgHeight);
+    c.drawImage(background, backgroundX, backgroundY, bgWidth, bgHeight);
+    c.drawImage(background, backgroundX + bgWidth, backgroundY, bgWidth, bgHeight);
+    c.drawImage(background, backgroundX - bgWidth, backgroundY, bgWidth, bgHeight);
+    c.drawImage(background, backgroundX, backgroundY - bgHeight, bgWidth, bgHeight);
+    c.drawImage(background, backgroundX + bgWidth, backgroundY - bgHeight, bgWidth, bgHeight);
+    c.drawImage(background, backgroundX - bgWidth, backgroundY - bgHeight, bgWidth, bgHeight);
+    c.drawImage(background, backgroundX, backgroundY + bgHeight, bgWidth, bgHeight);
+    c.drawImage(background, backgroundX + bgWidth, backgroundY + bgHeight, bgWidth, bgHeight);
+    c.drawImage(background, backgroundX - bgWidth, backgroundY + bgHeight, bgWidth, bgHeight);
 
     // Get correct sprite from spritesheet
     var spritesRow = Math.floor(spriteFrameNum / spriteFramesPerRow);
@@ -179,21 +176,38 @@ function draw() {
     var spriteX = spritesCol * playerImageW;
     var spriteY = spritesRow * playerImageH;
 
-    // check for player direction, and flip the image the right way
-    if(lookingL) {
+    if(moving) {
+        // check for player direction, and flip the image the right way
+        if(lookingL) {
 
-        // Flip canvas
-        c.translate(canvasWidth, 0);
-        c.scale(-1, 1);
-        
-        // Draw the player
-        c.drawImage(playerImage, spriteX, spriteY, playerImageW, playerImageH, playerX + 450 - camX, playerY - camY, playerWidth, playerHeight);
+            // Flip canvas
+            c.translate(canvasWidth, 0);
+            c.scale(-1, 1);
+            
+            // Draw the player
+            c.drawImage(playerImage, spriteX, spriteY, playerImageW, playerImageH, playerX + 150 - camX, playerY - camY, playerWidth, playerHeight);
 
-        // Remove flip
-        c.restore();
+            // Remove flip
+            c.restore();
 
+        } else {
+            c.drawImage(playerImage, spriteX, spriteY, playerImageW, playerImageH, playerX - camX, playerY - camY, playerWidth, playerHeight);
+        }
     } else {
-        c.drawImage(playerImage, spriteX, spriteY, playerImageW, playerImageH, playerX - camX, playerY - camY, playerWidth, playerHeight);
-    }
+        if(lookingL) {
+            
+            // Flip canvas
+            c.translate(canvasWidth, 0);
+            c.scale(-1, 1);
 
+            c.drawImage(stillPlayerImage, playerX + 150 - camX, playerY - camY, playerWidth, playerHeight);
+
+            // Remove flip
+            c.restore();
+
+        } else {
+            c.drawImage(stillPlayerImage, playerX - camX, playerY - camY, playerWidth, playerHeight);
+        }
+        
+    }
 }
