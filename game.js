@@ -53,7 +53,14 @@ function draw() {
     c.mozImageSmoothingEnabled = false;
     c.webkitImageSmoothingEnabled = false;
 
+    // Draw sky
+    c.fillStyle = 'royalblue';
+    c.fillRect(0, 0, canvasWidth, floorY - 40);
+
+    // Draw ground
+    c.fillStyle = 'limegreen';
+    c.fillRect(0, floorY - 40, canvasWidth, canvasHeight - floorY + 40);
 
     // Draw player
-    c.drawImage(playerImage, playerX, playerY);
+    c.drawImage(playerImage, playerX, playerY, playerWidth, playerHeight);
 }
