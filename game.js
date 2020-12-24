@@ -8,7 +8,7 @@ const floorY = 540;
 
 const playerYacceleration = 1;
 const jumpKeyCode = 87;
-const jumpPower = 10;
+const jumpPower = 15;
 
 
 // CONFIGURATION
