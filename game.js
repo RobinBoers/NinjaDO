@@ -13,7 +13,7 @@ var c = canvas.getContext('2d');
 canvas.width = canvasWidth;
 canvas.height = canvasHeight;
 document.body.appendChild(canvas);
-
+var i = 0;
 
 var playerImage = new Image();
 playerImage.src = 'assets/player.png';
@@ -38,6 +38,10 @@ function gameLoop() {
 // UPDATE
 
 function update() {
+
+    // Simple frame count
+    i = i+1;
+    console.log("Frame "+i);
 
 }
 
