@@ -2,6 +2,8 @@
 
 const canvasWidth = 800;
 const canvasHeight = 600;
+const bgWidth = 800;
+const bgHeight = 800;
 const playerWidth = 60;
 const playerHeight = 70;
 const floorY = 540;
@@ -25,6 +27,9 @@ var i = 0;
 
 var playerImage = new Image(playerWidth, playerHeight);
 playerImage.src = 'assets/player.png';
+
+var background = new Image();
+background.src = 'assets/background.png';
 
 var playerX = 50;
 var playerY = 40;
@@ -111,6 +116,9 @@ function draw() {
     // Draw sky
     c.fillStyle = 'royalblue';
     c.fillRect(0, 0, canvasWidth, floorY - 40);
+
+    // Draw backdrop
+    c.drawImage(background, 0, -210, bgWidth, bgHeight);
 
     // Draw ground
     c.fillStyle = 'limegreen';
