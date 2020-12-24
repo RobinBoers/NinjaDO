@@ -7,6 +7,9 @@ const playerHeight = 70;
 const floorY = 540;
 
 const playerYacceleration = 1;
+const jumpKeyCode = 87;
+const jumpPower = 10;
+
 
 // CONFIGURATION
 
@@ -23,7 +26,11 @@ playerImage.src = 'assets/player.png';
 var playerX = 50;
 var playerY = 40;
 var playerYspeed = 0;
+var jumping = false;
 
+// Event listeners
+window.addEventListener('keydown', onKeydown);
+window.addEventListener('keyup', onKeyup);
 window.addEventListener('load', start);
 
 function start() {
@@ -38,6 +45,20 @@ function gameLoop() {
     window.requestAnimationFrame(gameLoop);
 }
 
+// USER INPUT
+
+function onKeydown(event) {
+    console.log(event.keyCode);
+
+    if(event.keyCode === jumpKeyCode) jumping = true;
+}
+
+function onKeyup(event) {
+    console.log(event.keyCode);
+
+    if(event.keyCode === jumpKeyCode) jumping = false;
+}
+
 // UPDATE
 
 function update() {
@@ -45,6 +66,10 @@ function update() {
     // Simple frame count
     i = i+1;
     console.log("Frame "+i);
+
+    if(jumping) {
+        playerYspeed = -jumpPower;
+    }
 
     // Gravity
     playerY = playerY + playerYspeed;
