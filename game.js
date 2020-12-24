@@ -86,7 +86,6 @@ function update() {
 function draw() {
 
     c.imageSmoothingEnabled = false;
-    c.mozImageSmoothingEnabled = false;
     c.webkitImageSmoothingEnabled = false;
 
     // Draw sky
