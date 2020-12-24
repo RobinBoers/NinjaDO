@@ -1,2 +1,2 @@
-# OrangeSquid.js
+# NinjaDO
 Simple game written in JS
