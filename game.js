@@ -10,6 +10,9 @@ const playerYacceleration = 1;
 const jumpKeyCode = 87;
 const jumpPower = 15;
 
+const rightKeyCode = 68;
+const leftKeyCode = 65;
+const playerSpeed = 10;
 
 // CONFIGURATION
 
@@ -28,6 +31,8 @@ var playerY = 40;
 var playerYspeed = 0;
 var jumping = false;
 var inAir = false;
+var runningL = false;
+var runningR = false;
 
 // Event listeners
 window.addEventListener('keydown', onKeydown);
@@ -52,12 +57,16 @@ function onKeydown(event) {
     console.log(event.keyCode);
 
     if(event.keyCode === jumpKeyCode) jumping = true;
+    if(event.keyCode === rightKeyCode) runningR = true;
+    if(event.keyCode === leftKeyCode) runningL = true;
 }
 
 function onKeyup(event) {
     console.log(event.keyCode);
 
     if(event.keyCode === jumpKeyCode) jumping = false;
+    if(event.keyCode === rightKeyCode) runningR = false;
+    if(event.keyCode === leftKeyCode) runningL = false;
 }
 
 // UPDATE
@@ -71,6 +80,14 @@ function update() {
     if(jumping && !inAir) {
         playerYspeed = -jumpPower;
         inAir = true;
+    }
+
+    if(runningL) {
+        playerX = playerX - playerSpeed;
+    }
+
+    if(runningR) {
+        playerX = playerX + playerSpeed;
     }
 
     // Gravity
