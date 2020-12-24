@@ -65,7 +65,7 @@ function update() {
 
     // Simple frame count
     i = i+1;
-    console.log("Frame "+i);
+    document.querySelector("#frameNum").innerHTML = i;
 
     if(jumping) {
         playerYspeed = -jumpPower;
