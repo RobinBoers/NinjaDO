@@ -24,7 +24,6 @@ var c = canvas.getContext('2d');
 canvas.width = canvasWidth;
 canvas.height = canvasHeight;
 document.body.appendChild(canvas);
-var i = 0;
 
 // Animated sprite used when
 // the player is moving
@@ -44,7 +43,9 @@ background.src = 'assets/background.png';
 // Socket connection
 socket.on('init', handleInit);
 socket.on('keyCode', viewKeyCode);
-// socket.on('gameState', handleGameState);
+socket.on('gamestate', handleState);
+
+// COMMUNICATION
 
 function viewKeyCode(keyCode) {
     console.log(keyCode);
@@ -52,6 +53,17 @@ function viewKeyCode(keyCode) {
 
 function handleInit(msg) {
     console.log(msg);
+}
+
+
+// This function is used to get the gamestate,
+// and call the function to draw it on screen
+function handleState(state) {
+
+    // Convert string back into valid JSON
+    state = JSON.parse(state);
+
+    requestAnimationFrame(() => draw(state));
 }
 
 // USER INPUT
@@ -87,6 +99,7 @@ function draw(state) {
     var runningR = player.running.R;
     var maxPlayerHealth = player.maxhp;
     var gameOver = player.dead;
+    var i = state.frame;
 
     console.log();
 
@@ -216,5 +229,6 @@ const gameState = {
         maxhp: 20,
         hp: 1,
         dead: false
-	}
+    },
+    frame: 0,
 }
