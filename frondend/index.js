@@ -12,12 +12,24 @@ const playerImageH = 7;
 
 // CONFIGURATION
 
+// Connect to socket.io backend
 const socket = io("http://localhost:3000");
 
+// Get cavas and context
 var canvas = document.querySelector('#canvas');
 var c = canvas.getContext('2d');
 canvas.width = canvasWidth;
 canvas.height = canvasHeight;
+
+// Get elements from HTML
+const gameScreen = document.querySelector('#game');
+const homeScreen = document.querySelector("#home");
+const NGBtn = document.querySelector("#NGBtn");
+const JGBtn = document.querySelector("#JGBtn");
+const gameCodeInput = document.querySelector("#gameCode");
+
+NGBtn.addEventListener('click', newGame);
+JGBtn.addEventListener('click', joinGame);
 
 // Animated sprite used when
 // the player is moving
@@ -62,6 +74,21 @@ function onKeydown(e) {
 
 function onKeyup(e) {
     socket.emit('keyup', e.keyCode);
+}
+
+function newGame() {
+    // Hide homescreen, and show game
+    homeScreen.style.display = "none";
+    gameScreen.style.display = "block";
+    socket.emit('newGame');
+}
+
+function joinGame() {
+    // Hide homescreen, and show game
+    homeScreen.style.display = "none";
+    gameScreen.style.display = "block";
+    const code = gameCodeInput.nodeValue;
+    socket.emit("joinGame", code);
 }
 
 // DRAW

@@ -71,6 +71,9 @@ io.on('connection', client => {
     client.on('keydown', handleKeydown);
     client.on('keyup', handleKeyup);
 
+    client.on('newGame', openNewGame);
+    client.on('joinGame', handleJoinGame);
+
     function handleKeydown(keyCode) {
 
         try {
@@ -102,6 +105,12 @@ io.on('connection', client => {
         if(keyCode === downKeyCode) runningD = false;
         if(keyCode === rightKeyCode) runningR = false;
         if(keyCode === leftKeyCode) runningL = false;
+    }
+
+    function openNewGame() {
+    }
+
+    function handleJoinGame() {
     }
 
     var state = createGamestate();
