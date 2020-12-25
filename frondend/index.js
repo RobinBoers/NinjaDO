@@ -10,26 +10,14 @@ const playerHeight = 70;
 const playerImageW = 6;
 const playerImageH = 7;
 
-// Keycodes
-const upKeyCode = 87;
-const downKeyCode = 83;
-const rightKeyCode = 68;
-const leftKeyCode = 65;
-const hackKeyCode = 59;
-
-// Movement speed
-var playerSpeed = 8;
-const superSpeed = 30;
-
-// Abilities & Health
-const jumpKeyCode = 87;
-
 // Animated sprites
 const spriteFramesPerRow = 2;
 const totalFrames = 2;
 const AnimationSpeed = 10;
 
 // CONFIGURATION
+
+const socket = io("http://localhost:3000");
 
 var canvas = document.createElement('canvas');
 var c = canvas.getContext('2d');
@@ -53,9 +41,31 @@ spriteFrameNum = 0;
 var background = new Image();
 background.src = 'assets/background.png';
 
-// Event listeners
-// window.addEventListener('keydown', onKeydown);
-// window.addEventListener('keyup', onKeyup);
+// Socket connection
+socket.on('init', handleInit);
+socket.on('keyCode', viewKeyCode);
+// socket.on('gameState', handleGameState);
+
+function viewKeyCode(keyCode) {
+    console.log(keyCode);
+}
+
+function handleInit(msg) {
+    console.log(msg);
+}
+
+// USER INPUT
+
+window.addEventListener('keydown', onKeydown);
+window.addEventListener('keyup', onKeyup);
+
+function onKeydown(e) {
+    socket.emit('keydown', e.keyCode);
+}
+
+function onKeyup(e) {
+    socket.emit('keyup', e.keyCode);
+}
 
 // DRAW
 
