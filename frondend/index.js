@@ -10,11 +10,6 @@ const playerHeight = 70;
 const playerImageW = 6;
 const playerImageH = 7;
 
-// Animated sprites
-const spriteFramesPerRow = 2;
-const totalFrames = 2;
-const AnimationSpeed = 10;
-
 // CONFIGURATION
 
 const socket = io("http://localhost:3000");
@@ -33,8 +28,6 @@ playerImage.src = 'assets/playerSprites2.png';
 // Image used if the player isn't moving
 var stillPlayerImage = new Image();
 stillPlayerImage.src = 'assets/player.png';
-
-spriteFrameNum = 0;
 
 // Image for scene
 var background = new Image();
@@ -100,8 +93,10 @@ function draw(state) {
     var maxPlayerHealth = player.maxhp;
     var gameOver = player.dead;
     var i = state.frame;
-
-    console.log();
+    var spriteFrameNum = player.sprite.frameNum;
+    var animationSpeed = player.sprite.speed;
+    var totalFrames = player.sprite.total;
+    var spriteFramesPerRow = player.sprite.perRow;
 
     // Save the non-flipped state to restore later
     c.save();

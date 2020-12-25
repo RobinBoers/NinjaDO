@@ -1,5 +1,6 @@
 // CONFIGUARATION & CONSTANTS
 
+// Player info
 const jumpPower = 8;
 const maxPlayerHealth = 20;
 
@@ -7,6 +8,7 @@ const maxPlayerHealth = 20;
 var playerHealth = maxPlayerHealth;
 var gameOver = false;
 
+// Player movement & position
 var playerX = 50;
 var playerY = 40;
 var runningU = false;
@@ -34,8 +36,20 @@ const superSpeed = 30;
 var camX = 0;
 var camY = 0;
 
-// Framcounter, used for the animated sprite
+// Framerate, used to calculate
+// interval for the gameLoop
+const frameRate = 120;
+
+// Framecounter and animationspeed,
+// used for the animated sprite
 var frameCounter = 0;
+const AnimationSpeed = 10;
+var spriteFrameNum = 0;
+const spriteFramesPerRow = 2;
+const totalFrames = 2;
+
+// Framecounter, used for debugging
+// (displayed in HUD)
 var i = 0;
 
 // Initialize http, cors and socket.io
@@ -89,27 +103,30 @@ io.on('connection', client => {
         if(keyCode === rightKeyCode) runningR = false;
         if(keyCode === leftKeyCode) runningL = false;
     }
+
+    var state = createGamestate();
+    gameLoop(client, state);
     
 });
 
-function start() {
-    window.requestAnimationFrame(gameLoop);
-}
-
 // GAME LOOP
 
-function gameLoop(state) {
+function gameLoop(client, state) {
+    const gameInterval = setInterval(() => {
 
-    // Update the frame
-    update(state);
+        // Update the state
+        update();
+        state = createGamestate();
 
-    // Request next frame
-    window.requestAnimationFrame(gameLoop);
+        // Send the updated state to the
+        //  client as a string
+        client.emit('gamestate', JSON.stringify(state));
+    }, 1000 / frameRate);
 }
 
 // UPDATE
 
-function update() {
+function update(state) {
 
     // Simple frame count
     i = i+1;
@@ -162,4 +179,40 @@ function update() {
     }
 }
 
+function createGamestate() {
+    return {
+        player: {
+            pos: {
+                x: playerX,
+                y: playerY,
+                camX: camX,
+                camY: camY,
+            }, 
+            running: {
+                U: runningU,
+                D: runningD,
+                R: runningR,
+                L: runningL,
+            },
+            looking: {
+                l: lookingL,
+                r: lookingR
+            },
+            velocity: playerSpeed,
+            moving: false,
+            maxhp: maxPlayerHealth,
+            hp: maxPlayerHealth,
+            dead: gameOver,
+            sprite: {
+                frameNum: spriteFrameNum,
+                speed: AnimationSpeed,
+                total: totalFrames,
+                perRow: spriteFramesPerRow
+            }
+        },
+        frame: 0,
+    }
+}
+
+// Listen on port 3000
 http.listen(3000);
