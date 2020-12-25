@@ -35,14 +35,7 @@ background.src = 'assets/background.png';
 
 // Socket connection
 socket.on('init', handleInit);
-socket.on('keyCode', viewKeyCode);
 socket.on('gamestate', handleState);
-
-// COMMUNICATION
-
-function viewKeyCode(keyCode) {
-    console.log(keyCode);
-}
 
 function handleInit(msg) {
     console.log(msg);
