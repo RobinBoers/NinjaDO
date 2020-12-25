@@ -14,11 +14,10 @@ const playerImageH = 7;
 
 const socket = io("http://localhost:3000");
 
-var canvas = document.createElement('canvas');
+var canvas = document.querySelector('#canvas');
 var c = canvas.getContext('2d');
 canvas.width = canvasWidth;
 canvas.height = canvasHeight;
-document.body.appendChild(canvas);
 
 // Animated sprite used when
 // the player is moving
