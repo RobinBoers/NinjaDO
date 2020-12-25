@@ -38,7 +38,7 @@ var camY = 0;
 
 // Framerate, used to calculate
 // interval for the gameLoop
-const frameRate = 120;
+const frameRate = 90;
 
 // Framecounter and animationspeed,
 // used for the animated sprite
@@ -175,7 +175,6 @@ function update(state) {
     // Check for gameover
     if(playerHealth <= 0) {
         gameOver = true;
-        stop = true;
     }
 }
 
@@ -199,7 +198,7 @@ function createGamestate() {
                 r: lookingR
             },
             velocity: playerSpeed,
-            moving: false,
+            moving: moving,
             maxhp: maxPlayerHealth,
             hp: maxPlayerHealth,
             dead: gameOver,
