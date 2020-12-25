@@ -23,8 +23,6 @@ const superSpeed = 30;
 
 // Abilities & Health
 const jumpKeyCode = 87;
-const jumpPower = 8;
-const maxPlayerHealth = 20;
 
 // Animated sprites
 const spriteFramesPerRow = 2;
@@ -55,134 +53,9 @@ spriteFrameNum = 0;
 var background = new Image();
 background.src = 'assets/background.png';
 
-// Player movement and location
-var playerX = 50;
-var playerY = 40;
-var playerYspeed = 0;
-var runningU = false;
-var runningL = false;
-var runningR = false;
-var runningD = false;
-var lookingL = false;
-var lookingR = true;
-var moving = false;
-var hacking = false;
-
-// Player health and abilities
-var playerHealth = maxPlayerHealth;
-var playerMana = 5;
-var gameOver = false;
-
-// Viewport
-var camX = 0;
-var camY = 0;
-
-// Framcounter, used for the animated sprite
-var frameCounter = 0;
-
-// Overwrite which will stop the
-// game is set to true
-var stop = false;
-
 // Event listeners
-window.addEventListener('keydown', onKeydown);
-window.addEventListener('keyup', onKeyup);
-// window.addEventListener('load', start);
-
-function start() {
-    window.requestAnimationFrame(gameLoop);
-}
-
-// GAME LOOP
-
-function gameLoop() {
-
-    // Overwrite to stop the game
-    if (stop) return;
-
-    // Update and draw the frame
-    update();
-    draw();
-
-    // Request next frame
-    window.requestAnimationFrame(gameLoop);
-}
-
-// USER INPUT
-
-function onKeydown(event) {
-    console.log(event.keyCode);
-
-    if(event.keyCode === upKeyCode) runningU = true;
-    if(event.keyCode === downKeyCode) runningD = true;
-    if(event.keyCode === rightKeyCode) runningR = true;
-    if(event.keyCode === leftKeyCode) runningL = true;
-    if(event.keyCode === hackKeyCode) hacking = true;
-}
-
-function onKeyup(event) {
-    console.log(event.keyCode);
-
-    if(event.keyCode === upKeyCode) runningU = false;
-    if(event.keyCode === downKeyCode) runningD = false;
-    if(event.keyCode === rightKeyCode) runningR = false;
-    if(event.keyCode === leftKeyCode) runningL = false;
-}
-
-// UPDATE
-
-function update() {
-
-    // Simple frame count
-    i = i+1;
-    frameCounter = frameCounter + 1;
-
-    // Superspeed for hackers
-    // Is triggerd by the ; key
-    if(hacking) {
-        playerSpeed = superSpeed;
-    }
-
-    // Update player movement
-    if(runningU) {
-        playerY = playerY - playerSpeed;
-    }
-    if(runningD) {
-        playerY = playerY + playerSpeed;
-    }
-    if(runningL) {
-        playerX = playerX - playerSpeed;
-        lookingL = true;
-        lookingR = false;
-    }
-    else if(runningR) {
-        playerX = playerX + playerSpeed;
-        lookingR = true;
-        lookingL = false;
-    }
-
-    // Check if moving, used later to determin image to use
-    if(runningR || runningD || runningL || runningU) moving = true;
-    else moving = false;
-
-    // Update viewport
-    camX = playerX - 300;
-    camY = playerY - 300;
-
-    // Update player animation
-    if((frameCounter % AnimationSpeed) === 0) {
-        spriteFrameNum = spriteFrameNum + 1;
-        if(spriteFrameNum >= totalFrames) {
-            spriteFrameNum = 0;
-        }
-    }
-
-    // Check for gameover
-    if(playerHealth <= 0) {
-        gameOver = true;
-        stop = true;
-    }
-}
+// window.addEventListener('keydown', onKeydown);
+// window.addEventListener('keyup', onKeyup);
 
 // DRAW
 
@@ -198,6 +71,12 @@ function draw(state) {
     var playerHealth = player.hp;
     var camX = player.pos.camX;
     var camY = player.pos.camY;
+    var runningU = player.running.U;
+    var runningD = player.running.D;
+    var runningL = player.running.L;
+    var runningR = player.running.R;
+    var maxPlayerHealth = player.maxhp;
+    var gameOver = player.dead;
 
     console.log();
 
@@ -297,7 +176,7 @@ function draw(state) {
     c.strokeRect(400, 10, 380, 20);
 
     // Draw Gameover screen when game is over (duh)
-    if(gameOver === true || stop === true) {
+    if(gameOver === true) {
         c.fillStyle = 'white';
         c.font = '96px JetBrains Mono';
         c.fillText('G4me 0v3r!', 120, 300);
@@ -311,13 +190,21 @@ const gameState = {
             y: -120,
             camX: -300,
             camY: -300,
-		}, 
+        }, 
+        running: {
+            U: false,
+            D: false,
+            R: true,
+            L: false,
+        },
 		looking: {
 			l: true,
 			r: false
 		},
 		velocity: 10,
         moving: false,
-        hp: 1
+        maxhp: 20,
+        hp: 1,
+        dead: false
 	}
 }
