@@ -18,8 +18,11 @@ const socket = io("http://localhost:3000");
 // Socket connection
 socket.on('connected', () => {console.log("Connected.")});
 socket.on('init', handleInit);
+socket.on('msg', viewMessage);
 socket.on('gamestate', handleState);
 socket.on('createdGame', handleGamecode);
+socket.on('unknownGame', () => {console.log("Gamecode incorrect or game unknown.")});
+socket.on('TooManyPlayers', () => {console.log("Too many players.")});
 
 let canvas;
 let c;
@@ -42,7 +45,7 @@ const gameScreen = document.querySelector('#game');
 const homeScreen = document.querySelector("#home");
 const NGBtn = document.querySelector("#NGBtn");
 const JGBtn = document.querySelector("#JGBtn");
-const gameCodeInput = document.querySelector("#gameCode");
+const gameCodeInput = document.getElementById("gameCode");
 const gameCodeDisplay = document.querySelector("#GameCodeDisplay");
 
 NGBtn.addEventListener('click', newGame);
@@ -70,7 +73,12 @@ function handleInit(num) {
 }
 
 function handleGamecode(code) {
+    console.log("Received code.");
     gameCodeDisplay.innerText = code;
+}
+
+function viewMessage(message) {
+    console.log(message);
 }
 
 // This function is used to get the gamestate,
@@ -102,7 +110,8 @@ function newGame() {
 }
 
 function joinGame() {
-    const code = gameCodeInput.nodeValue;
+    const code = gameCodeInput.value;
+    console.log("Preparing to join game "+code)
     socket.emit("joinGame", code);
     init();
 }

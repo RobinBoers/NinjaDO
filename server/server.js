@@ -116,6 +116,9 @@ io.on('connection', client => {
 
     function openNewGame() {
         let roomName = makeId(5);
+
+        client.emit('msg', "Serverconnection with gamecode: "+roomName);
+
         clientRooms[client.id] = roomName;
         client.emit('createdGame', roomName);
 
@@ -126,17 +129,22 @@ io.on('connection', client => {
         client.emit('init', 1);
     }
 
-    function handleJoinGame(code) {
-        const room = io.sockets.adapter.rooms[code];
+    function handleJoinGame(roomName) {
+
+        client.emit('msg', "Serverconnection with gamecode: " + roomName);
+
+        const room = io.sockets.adapter.rooms[JSON.stringify(roomName)];
+        client.emit('msg', room);
         let allUsers;
 
         if(room) {
             allUsers = room.sockets;
+            client.emit('msg', allUsers);
         }
 
         let numClients = 0;
         if(allUsers) {
-            numClients = Object.keys(allsUsers).length;
+            numClients = Object.keys(allUsers).length;
         }
 
         if(numClients === 0) {
@@ -147,9 +155,9 @@ io.on('connection', client => {
             return;
         } 
 
-        clientRooms[client.id] = code;
+        clientRooms[client.id] = roomName;
 
-        client.join(code);
+        client.join(roomName);
         client.number = 2;
         client.emit('init', 2);
 
@@ -160,7 +168,7 @@ io.on('connection', client => {
 
 // GAME LOOP
 
-function gameLoop() {
+function gameLoop(roomName) {
     const gameInterval = setInterval(() => {
 
         // Update the state
