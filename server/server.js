@@ -43,7 +43,7 @@ const frameRate = 90;
 // Framecounter and animationspeed,
 // used for the animated sprite
 var frameCounter = 0;
-const AnimationSpeed = 10;
+var AnimationSpeed = 10;
 var spriteFrameNum = 0;
 const spriteFramesPerRow = 2;
 const totalFrames = 2;
