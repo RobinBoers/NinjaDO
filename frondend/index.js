@@ -206,29 +206,31 @@ function draw(state) {
     }
 }
 
-const gameState = {
-	player: {
-		pos: {
-			x: 150,
-            y: -120,
-            camX: -300,
-            camY: -300,
-        }, 
-        running: {
-            U: false,
-            D: false,
-            R: true,
-            L: false,
-        },
-		looking: {
-			l: true,
-			r: false
-		},
-		velocity: 10,
-        moving: false,
-        maxhp: 20,
-        hp: 1,
-        dead: false
-    },
-    frame: 0,
-}
+// Example gamestate below
+
+// const gameState = {
+// 	player: {
+// 		pos: {
+// 			x: 50,
+//             y: 40,
+//             camX: -250,
+//             camY: -260,
+//         }, 
+//         running: {
+//             U: false,
+//             D: false,
+//             R: true,
+//             L: false,
+//         },
+// 		looking: {
+// 			l: true,
+// 			r: false
+// 		},
+// 		velocity: 10,
+//         moving: false,
+//         maxhp: 20,
+//         hp: 1,
+//         dead: false
+//     },
+//     frame: 0,
+// }
