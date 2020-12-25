@@ -209,7 +209,7 @@ function createGamestate() {
                 perRow: spriteFramesPerRow
             }
         },
-        frame: 0,
+        frame: i,
     }
 }
 
