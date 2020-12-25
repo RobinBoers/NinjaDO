@@ -1,3 +1,18 @@
+// INITIALIZE
+
+// Initialize http, cors and socket.io
+var http = require('http').createServer();
+var cors = require('cors');
+const io = require('socket.io')(http, {
+    cors: {
+      origin: "*",
+      methods: ["PUT", "GET", "POST", "DELETE", "OPTIONS"],
+      allowedHeaders: ["origin", "x-requested-with", "content-type"]
+    }
+});
+
+const { makeId } = require('./utils');
+
 // CONFIGUARATION & CONSTANTS
 
 // Player info
@@ -52,21 +67,13 @@ const totalFrames = 2;
 // (displayed in HUD)
 var i = 0;
 
-// Initialize http, cors and socket.io
-var http = require('http').createServer();
-var cors = require('cors');
-const io = require('socket.io')(http, {
-    cors: {
-      origin: "*",
-      methods: ["PUT", "GET", "POST", "DELETE", "OPTIONS"],
-      allowedHeaders: ["origin", "x-requested-with", "content-type"]
-    }
-});
+const state = {};
+const clientRooms = {};
 
 // Check when a client is connecting
 io.on('connection', client => {
 
-    client.emit('init', "Connected.");
+    client.emit('connected');
 
     client.on('keydown', handleKeydown);
     client.on('keyup', handleKeyup);
@@ -108,28 +115,61 @@ io.on('connection', client => {
     }
 
     function openNewGame() {
+        let roomName = makeId(5);
+        clientRooms[client.id] = roomName;
+        client.emit('createdGame', roomName);
+
+        state[roomName] = createGamestate();
+
+        client.join(roomName);
+        client.number = 1;
+        client.emit('init', 1);
     }
 
-    function handleJoinGame() {
-    }
+    function handleJoinGame(code) {
+        const room = io.sockets.adapter.rooms[code];
+        let allUsers;
 
-    var state = createGamestate();
-    gameLoop(client, state);
+        if(room) {
+            allUsers = room.sockets;
+        }
+
+        let numClients = 0;
+        if(allUsers) {
+            numClients = Object.keys(allsUsers).length;
+        }
+
+        if(numClients === 0) {
+            client.emit('unknownGame');
+            return;
+        } else if(numClients > 1) {
+            client.emit('TooManyPlayers');
+            return;
+        } 
+
+        clientRooms[client.id] = code;
+
+        client.join(code);
+        client.number = 2;
+        client.emit('init', 2);
+
+        gameLoop(roomName);
+    }
     
 });
 
 // GAME LOOP
 
-function gameLoop(client, state) {
+function gameLoop() {
     const gameInterval = setInterval(() => {
 
         // Update the state
         update();
-        state = createGamestate();
+        state[roomName] = createGamestate();
 
         // Send the updated state to the
         //  client as a string
-        client.emit('gamestate', JSON.stringify(state));
+        client.emit('gamestate', JSON.stringify(state[roomName]));
     }, 1000 / frameRate);
 }
 

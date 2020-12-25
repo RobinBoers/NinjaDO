@@ -15,11 +15,27 @@ const playerImageH = 7;
 // Connect to socket.io backend
 const socket = io("http://localhost:3000");
 
-// Get cavas and context
-var canvas = document.querySelector('#canvas');
-var c = canvas.getContext('2d');
-canvas.width = canvasWidth;
-canvas.height = canvasHeight;
+// Socket connection
+socket.on('connected', () => {console.log("Connected.")});
+socket.on('init', handleInit);
+socket.on('gamestate', handleState);
+socket.on('createdGame', handleGamecode);
+
+let canvas;
+let c;
+let playerNum;
+
+function init() {
+    // Hide homescreen, and show game
+    homeScreen.style.display = "none";
+    gameScreen.style.display = "block";
+
+    // Get cavas and context
+    canvas = document.querySelector('#canvas');
+    c = canvas.getContext('2d');
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+}
 
 // Get elements from HTML
 const gameScreen = document.querySelector('#game');
@@ -27,6 +43,7 @@ const homeScreen = document.querySelector("#home");
 const NGBtn = document.querySelector("#NGBtn");
 const JGBtn = document.querySelector("#JGBtn");
 const gameCodeInput = document.querySelector("#gameCode");
+const gameCodeDisplay = document.querySelector("#GameCodeDisplay");
 
 NGBtn.addEventListener('click', newGame);
 JGBtn.addEventListener('click', joinGame);
@@ -44,14 +61,17 @@ stillPlayerImage.src = 'assets/player.png';
 var background = new Image();
 background.src = 'assets/background.png';
 
-// Socket connection
-socket.on('init', handleInit);
-socket.on('gamestate', handleState);
+// HANDLERS
 
-function handleInit(msg) {
-    console.log(msg);
+// Used to recieve playernumber / playerID
+function handleInit(num) {
+    console.log("Your playerID is "+num);
+    playerNum = num;
 }
 
+function handleGamecode(code) {
+    gameCodeDisplay.innerText = code;
+}
 
 // This function is used to get the gamestate,
 // and call the function to draw it on screen
@@ -77,18 +97,14 @@ function onKeyup(e) {
 }
 
 function newGame() {
-    // Hide homescreen, and show game
-    homeScreen.style.display = "none";
-    gameScreen.style.display = "block";
     socket.emit('newGame');
+    init();
 }
 
 function joinGame() {
-    // Hide homescreen, and show game
-    homeScreen.style.display = "none";
-    gameScreen.style.display = "block";
     const code = gameCodeInput.nodeValue;
     socket.emit("joinGame", code);
+    init();
 }
 
 // DRAW
