@@ -91,6 +91,8 @@ io.on('connection', client => {
         // Set correct index for array
         playerNum = playerNum -1;
 
+        if(state[roomName].players[playerNum].dead) return;
+
         try {
             keyCode = parseInt(keyCode);
         } catch(e) {
@@ -121,6 +123,8 @@ io.on('connection', client => {
 
         // Set correct index for array
         playerNum = playerNum -1;
+
+        if(state[roomName].players[playerNum].dead) return;
 
         try {
             keyCode = parseInt(keyCode);
