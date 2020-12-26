@@ -86,6 +86,8 @@ io.on('connection', client => {
         // Get roomName from all rooms (by client ID)
         var roomName = clientRooms[client.id];
 
+        if(!roomName) return;
+
         // Set correct index for array
         playerNum = playerNum -1;
 
@@ -114,6 +116,8 @@ io.on('connection', client => {
 
         // Get roomName from all rooms (by client ID)
         var roomName = clientRooms[client.id];
+
+        if(!roomName) return;
 
         // Set correct index for array
         playerNum = playerNum -1;
@@ -210,7 +214,8 @@ function gameLoop(roomName) {
 function update(roomName) {
 
     // Simple frame count
-    state[roomName].frame = state.frame+1;
+    i = i + 1;
+    state[roomName].frame = i;
     frameCounter = frameCounter + 1;
 
     // Player movement (for player 1)
