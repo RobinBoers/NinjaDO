@@ -10,8 +10,4 @@ To run the code, make sure you installed node.js<br>
 Then start the server with ```node server.js```.
 After you started the server, you should be able to open the index.html file.
 
-If you choose to run it manually, please install socket.io and cors using:<br>
-```yarn add socket.io```<br>
-```yarn add cors```
-
 ![screenshot](assets/screenshot.png)
