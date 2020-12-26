@@ -48,7 +48,7 @@ var playerSpeed = 6;
 const superSpeed = 30;
 
 // Abilities
-const abilityStrength = 4; // total hp is 20
+const abilityStrength = 2; // total hp is 20
 const abilityCooldown = 60; // devide by 90 for seconds
 var abilityTimer = 0;
 const maxManaPoints = 5;
