@@ -83,7 +83,11 @@ io.on('connection', client => {
 
     function handleKeydown(keyCode, playerNum) {
 
+        // Get roomName from all rooms (by client ID)
         var roomName = clientRooms[client.id];
+
+        // Set correct index for array
+        playerNum = playerNum -1;
 
         try {
             keyCode = parseInt(keyCode);
@@ -92,21 +96,27 @@ io.on('connection', client => {
             return;
         }
 
-        if(keyCode === upKeyCode) state[roomName].player.running.U = true;
-        if(keyCode === downKeyCode) state[roomName].player.running.D = true;
-        if(keyCode === rightKeyCode) state[roomName].player.running.R = true;
-        if(keyCode === leftKeyCode) state[roomName].player.running.L = true;
+        // Update gamestate based on input
+        if(keyCode === upKeyCode) state[roomName].players[playerNum].running.U = true;
+        if(keyCode === downKeyCode) state[roomName].players[playerNum].running.D = true;
+        if(keyCode === rightKeyCode) state[roomName].players[playerNum].running.R = true;
+        if(keyCode === leftKeyCode) state[roomName].players[playerNum].running.L = true;
 
         if(keyCode === hackKeyCode) {
-            state[roomName].player.velocity = superSpeed;
+            state[roomName].players[playerNum].velocity = superSpeed;
         }
 
+        // Send the code to the client for debugging
         client.emit('keyCode', keyCode);
     }
 
     function handleKeyup(keyCode, playerNum) {
 
+        // Get roomName from all rooms (by client ID)
         var roomName = clientRooms[client.id];
+
+        // Set correct index for array
+        playerNum = playerNum -1;
 
         try {
             keyCode = parseInt(keyCode);
@@ -115,10 +125,14 @@ io.on('connection', client => {
             return;
         }
 
-        if(keyCode === upKeyCode) state[roomName].player.running.U = false;
-        if(keyCode === downKeyCode) state[roomName].player.running.D = false;
-        if(keyCode === rightKeyCode) state[roomName].player.running.R = false;
-        if(keyCode === leftKeyCode) state[roomName].player.running.L = false;
+        // Update gamestate based on input
+        if(keyCode === upKeyCode) state[roomName].players[playerNum].running.U = false;
+        if(keyCode === downKeyCode) state[roomName].players[playerNum].running.D = false;
+        if(keyCode === rightKeyCode) state[roomName].players[playerNum].running.R = false;
+        if(keyCode === leftKeyCode) state[roomName].players[playerNum].running.L = false;
+
+        // Send the code to the client for debugging
+        client.emit('keyCode', keyCode);
     }
 
     function openNewGame() {
@@ -199,54 +213,98 @@ function update(roomName) {
     state[roomName].frame = state.frame+1;
     frameCounter = frameCounter + 1;
 
-    // Player movement
-    if(state[roomName].player.running.U) { 
-        state[roomName].player.pos.y = state[roomName].player.pos.y - state[roomName].player.velocity; 
+    // Player movement (for player 1)
+    if(state[roomName].players[0].running.U) { 
+        state[roomName].players[0].pos.y = state[roomName].players[0].pos.y - state[roomName].players[0].velocity; 
     }
-    if(state[roomName].player.running.D) {
-        state[roomName].player.pos.y = state[roomName].player.pos.y + state[roomName].player.velocity;
+    if(state[roomName].players[0].running.D) {
+        state[roomName].players[0].pos.y = state[roomName].players[0].pos.y + state[roomName].players[0].velocity;
     }
-    if(state[roomName].player.running.R) {
-        state[roomName].player.pos.x = state[roomName].player.pos.x + state[roomName].player.velocity;
-        state[roomName].player.looking.r = true;
-        state[roomName].player.looking.l = false;
+    if(state[roomName].players[0].running.R) {
+        state[roomName].players[0].pos.x = state[roomName].players[0].pos.x + state[roomName].players[0].velocity;
+        state[roomName].players[0].looking.r = true;
+        state[roomName].players[0].looking.l = false;
     }
-    if(state[roomName].player.running.L) {
-        state[roomName].player.pos.x = state[roomName].player.pos.x - state[roomName].player.velocity;
-        state[roomName].player.looking.l = true;
-        state[roomName].player.looking.r = false;
+    if(state[roomName].players[0].running.L) {
+        state[roomName].players[0].pos.x = state[roomName].players[0].pos.x - state[roomName].players[0].velocity;
+        state[roomName].players[0].looking.l = true;
+        state[roomName].players[0].looking.r = false;
     }
 
-    // Check if moving, used later to determin image to use
-    if( state[roomName].player.running.R || 
-        state[roomName].player.running.D || 
-        state[roomName].player.running.L || 
-        state[roomName].player.running.U) {
-        state[roomName].player.moving = true;
+    // Player movement (for player 2)
+    if(state[roomName].players[1].running.U) { 
+        state[roomName].players[1].pos.y = state[roomName].players[1].pos.y - state[roomName].players[1].velocity; 
     }
-    else state[roomName].player.moving = false;
+    if(state[roomName].players[1].running.D) {
+        state[roomName].players[1].pos.y = state[roomName].players[1].pos.y + state[roomName].players[1].velocity;
+    }
+    if(state[roomName].players[1].running.R) {
+        state[roomName].players[1].pos.x = state[roomName].players[1].pos.x + state[roomName].players[1].velocity;
+        state[roomName].players[1].looking.r = true;
+        state[roomName].players[1].looking.l = false;
+    }
+    if(state[roomName].players[1].running.L) {
+        state[roomName].players[1].pos.x = state[roomName].players[1].pos.x - state[roomName].players[1].velocity;
+        state[roomName].players[1].looking.l = true;
+        state[roomName].players[1].looking.r = false;
+    }
 
-    // Update viewport
-    state[roomName].player.pos.camX = state[roomName].player.pos.x - 300;
-    state[roomName].player.pos.camY = state[roomName].player.pos.y - 300;
+    // Check if moving, used later to determin image to use (player 1)
+    if( state[roomName].players[0].running.R || 
+        state[roomName].players[0].running.D || 
+        state[roomName].players[0].running.L || 
+        state[roomName].players[0].running.U) {
+        state[roomName].players[0].moving = true;
+    }
+    else state[roomName].players[0].moving = false;
 
-    // Update player animation
+    // Check if moving, used later to determin image to use (player 2)
+    if( state[roomName].players[1].running.R || 
+        state[roomName].players[1].running.D || 
+        state[roomName].players[1].running.L || 
+        state[roomName].players[1].running.U) {
+        state[roomName].players[1].moving = true;
+    }
+    else state[roomName].players[1].moving = false;
+
+    // Update viewport (player 1)
+    state[roomName].players[0].pos.camX = state[roomName].players[0].pos.x - 300;
+    state[roomName].players[0].pos.camY = state[roomName].players[0].pos.y - 300;
+
+    // Update viewport (player 2)
+    state[roomName].players[1].pos.camX = state[roomName].players[1].pos.x - 300;
+    state[roomName].players[1].pos.camY = state[roomName].players[1].pos.y - 300;
+
+    // Update player animation (player 1)
     if((frameCounter % AnimationSpeed) === 0) {
-        state[roomName].player.sprite.frameNum = state[roomName].player.sprite.frameNum + 1;
-        if(state[roomName].player.sprite.frameNum >= totalFrames) {
-            state[roomName].player.sprite.frameNum = 0;
+        state[roomName].players[0].sprite.frameNum = state[roomName].players[0].sprite.frameNum + 1;
+        if(state[roomName].players[0].sprite.frameNum >= totalFrames) {
+            state[roomName].players[0].sprite.frameNum = 0;
         }
     }
 
-    // Check for gameover
-    if(state[roomName].player.hp <= 0) {
-        state[roomName].player.dead = true;
+    // Update player animation (player 2)
+    if((frameCounter % AnimationSpeed) === 0) {
+        state[roomName].players[1].sprite.frameNum = state[roomName].players[1].sprite.frameNum + 1;
+        if(state[roomName].players[1].sprite.frameNum >= totalFrames) {
+            state[roomName].players[1].sprite.frameNum = 0;
+        }
+    }
+
+    // Check for gameover (player 1)
+    if(state[roomName].players[0].hp <= 0) {
+        state[roomName].players[0].dead = true;
+    }
+
+    // Check for gameover (player 2)
+    if(state[roomName].players[1].hp <= 0) {
+        state[roomName].players[1].dead = true;
     }
 }
 
 function createGamestate() {
     return {
-        player: {
+        players: [{
             pos: {
                 x: playerX,
                 y: playerY,
@@ -275,6 +333,35 @@ function createGamestate() {
                 perRow: spriteFramesPerRow
             }
         },
+        {
+            pos: {
+                x: playerX,
+                y: playerY,
+                camX: camX,
+                camY: camY,
+            }, 
+            running: {
+                U: runningU,
+                D: runningD,
+                R: runningR,
+                L: runningL,
+            },
+            looking: {
+                l: lookingL,
+                r: lookingR,
+            },
+            velocity: playerSpeed,
+            moving: moving,
+            maxhp: maxPlayerHealth,
+            hp: maxPlayerHealth,
+            dead: gameOver,
+            sprite: {
+                frameNum: spriteFrameNum,
+                speed: AnimationSpeed,
+                total: totalFrames,
+                perRow: spriteFramesPerRow
+            }
+        }],
         frame: i,
     }
 }

@@ -123,9 +123,12 @@ function joinGame() {
 
 // DRAW
 
-function draw(state) {
+function draw(state, playerNum) {
 
-    var player = state.player;
+    // Set correct index for array
+    playerNum = playerNum -1;
+
+    var player = state.players[playerNum];
     var playerX = player.pos.x;
     var playerY = player.pos.y;
     var playerSpeed = player.velocity;
