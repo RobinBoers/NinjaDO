@@ -208,16 +208,8 @@ function draw(state, playerNum) {
     // Show framenum on the bottom right
     c.fillText(i, 720, 600);
 
-
-    if(playerNum === 0) {
-        // Draw player 1 + 2
-        drawPlayer(state.players[0]);
-        drawPlayerTwo(state.players[1]);
-    } else {
-        drawPlayer(state.players[1]);
-        drawPlayerTwo(state.players[0]);
-    }
-    
+    drawPlayer(state.players[1], camX, camY);
+    drawPlayer(state.players[0], camX, camY);
 
     // Draw a healthbar
     c.fillStyle = "tomato";
@@ -234,14 +226,12 @@ function draw(state, playerNum) {
     }
 }
 
-function drawPlayer(player) {
+function drawPlayer(player, camX, camY) {
 
     var playerX = player.pos.x;
     var playerY = player.pos.y;
     var moving = player.moving;
     var lookingL = player.looking.l;
-    var camX = player.pos.camX;
-    var camY = player.pos.camY;
     var spriteFrameNum = player.sprite.frameNum;
     var spriteFramesPerRow = player.sprite.perRow;
 
@@ -278,53 +268,6 @@ function drawPlayer(player) {
         } else {
             // Put the player onscreen
             c.drawImage(stillPlayerImage, playerX - camX, playerY - camY, playerWidth, playerHeight);
-        }
-        
-    }
-}
-
-function drawPlayerTwo(player) {
-
-    var playerX = player.pos.x;
-    var playerY = player.pos.y;
-    var moving = player.moving;
-    var lookingL = player.looking.l;
-    var spriteFrameNum = player.sprite.frameNum;
-    var spriteFramesPerRow = player.sprite.perRow;
-
-    // Get correct sprite from spritesheet
-    var spritesRow = Math.floor(spriteFrameNum / spriteFramesPerRow);
-    var spritesCol = spriteFrameNum % spriteFramesPerRow;
-    var spriteX = spritesCol * playerImageW;
-    var spriteY = spritesRow * playerImageH;
-
-    // If the player is moving,
-    // use a animated sprite (from spritesheet)
-    if(moving) {
-
-        // Check for player direction, and flip the image the right way
-        if(lookingL) {
-
-            // Put the player onscreen
-            c.drawImage(playerImageL, spriteX, spriteY, playerImageW, playerImageH, 12 - camX, -4 - camY, playerWidth, playerHeight);
-
-        } else {
-            // Put the player onscreen
-            c.drawImage(playerImage, spriteX, spriteY, playerImageW, playerImageH, 12 - camX, -4 - camY, playerWidth, playerHeight);
-        }
-
-    // If the player isn't moving, just use a still sprite
-    } else {
-
-        // Check for player direction, and flip the image the right way
-        if(lookingL) {
-
-            // Put the player onscreen
-            c.drawImage(stillPlayerImageL, 12 - camX, -4 - camY, playerWidth, playerHeight);
-
-        } else {
-            // Put the player onscreen
-            c.drawImage(stillPlayerImage, 12 - camX, -4 - camY, playerWidth, playerHeight);
         }
         
     }
