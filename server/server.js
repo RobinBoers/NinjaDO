@@ -172,9 +172,19 @@ io.on('connection', client => {
 
         // Damage other player
         if(playerNum === 1) {
+            // Jump to victim
+            state[roomName].players[0].pos.x = state[roomName].players[1].pos.x;
+            state[roomName].players[0].pos.y = state[roomName].players[1].pos.y;
+
+            // Do damage
             state[roomName].players[1].hp = state[roomName].players[1].hp - abilityStrength;
             state[roomName].players[1].hurt = true;
         } else if(playerNum === 2) {
+            // Jump to victim
+            state[roomName].players[1].pos.x = state[roomName].players[0].pos.x;
+            state[roomName].players[1].pos.y = state[roomName].players[0].pos.y;
+
+            // Do damage
             state[roomName].players[0].hp = state[roomName].players[0].hp - abilityStrength;
             state[roomName].players[0].hurt = true;
         }
