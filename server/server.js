@@ -84,7 +84,7 @@ io.on('connection', client => {
     function handleKeydown(keyCode, playerNum) {
 
         var roomName = clientRooms[client.id];
-        
+
         try {
             keyCode = parseInt(keyCode);
         } catch(e) {
@@ -232,9 +232,9 @@ function update(roomName) {
 
     // Update player animation
     if((frameCounter % AnimationSpeed) === 0) {
-        spriteFrameNum = spriteFrameNum + 1;
-        if(spriteFrameNum >= totalFrames) {
-            spriteFrameNum = 0;
+        state[roomName].player.sprite.frameNum = state[roomName].player.sprite.frameNum + 1;
+        if(state[roomName].player.sprite.frameNum >= totalFrames) {
+            state[roomName].player.sprite.frameNum = 0;
         }
     }
 
