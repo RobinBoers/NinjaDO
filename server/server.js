@@ -48,10 +48,11 @@ var playerSpeed = 6;
 const superSpeed = 30;
 
 // Abilities
-abilityStrength = 4;
-abilityCooldown = 3;
-maxManaPoints = 5;
-manaRegenCooldown = 3;
+const abilityStrength = 4;
+const abilityCooldown = 270;
+const maxManaPoints = 5;
+const manaRegenCooldown = 270; // / 90 for seconds
+var manaFrameCounter = 0;
 
 // Viewport
 var camX = 0;
@@ -157,17 +158,25 @@ io.on('connection', client => {
 
         if(!roomName) return;
 
+        // Check if player is dead, and if he has enough mana
         if(state[roomName].players[playerNum - 1].dead) return;
+        if(state[roomName].players[playerNum - 1].mana <= 0) return;
 
         // Remove mana for using attack
         state[roomName].players[playerNum - 1].mana = state[roomName].players[playerNum - 1].mana -1;
 
+        // Damage other player
         if(playerNum === 1) {
             state[roomName].players[1].hp = state[roomName].players[1].hp - abilityStrength;
+            state[roomName].players[1].hurt = true;
         } else if(playerNum === 2) {
             state[roomName].players[0].hp = state[roomName].players[0].hp - abilityStrength;
+            state[roomName].players[0].hurt = true;
         }
 
+        // Let other player know he is damaged
+        client.to(roomName).emit("hurt");
+        
         // Send the code to the client for debugging
         client.emit('msg', "Used ability.");
     }
@@ -250,6 +259,15 @@ function update(roomName) {
     i = i + 1;
     state[roomName].frame = i;
     frameCounter = frameCounter + 1;
+    manaFrameCounter = manaFrameCounter + 1;
+
+    // Update mana for both players
+    if(manaFrameCounter === manaRegenCooldown) {
+        manaFrameCounter = 0;
+        state[roomName].players[0].mana = state[roomName].players[0].mana + 1;
+        state[roomName].players[1].mana = state[roomName].players[1].mana + 1;
+        io.to(roomName).emit('msg', 'Reset mana Timer.');
+    }
 
     // Player movement (for player 1)
     if(state[roomName].players[0].running.U) { 
@@ -360,6 +378,8 @@ function createGamestate() {
             moving: moving,
             maxhp: maxPlayerHealth,
             hp: maxPlayerHealth,
+            mana: maxManaPoints,
+            hurt: false,
             dead: gameOver,
             sprite: {
                 frameNum: spriteFrameNum,
@@ -390,6 +410,7 @@ function createGamestate() {
             maxhp: maxPlayerHealth,
             hp: maxPlayerHealth,
             mana: maxManaPoints,
+            hurt: false,
             dead: gameOver,
             sprite: {
                 frameNum: spriteFrameNum,
