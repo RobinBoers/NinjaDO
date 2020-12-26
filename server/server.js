@@ -47,6 +47,12 @@ const jumpKeyCode = 87;
 var playerSpeed = 6;
 const superSpeed = 30;
 
+// Abilities
+abilityStrength = 4;
+abilityCooldown = 3;
+maxManaPoints = 5;
+manaRegenCooldown = 3;
+
 // Viewport
 var camX = 0;
 var camY = 0;
@@ -77,6 +83,7 @@ io.on('connection', client => {
 
     client.on('keydown', handleKeydown);
     client.on('keyup', handleKeyup);
+    client.on('abilityRequest', handleAbilityRequest);
 
     client.on('newGame', openNewGame);
     client.on('joinGame', handleJoinGame);
@@ -141,6 +148,28 @@ io.on('connection', client => {
 
         // Send the code to the client for debugging
         client.emit('keyCode', keyCode);
+    }
+
+    function handleAbilityRequest(event, playerNum) {
+
+        // Get roomName from all rooms (by client ID)
+        var roomName = clientRooms[client.id];
+
+        if(!roomName) return;
+
+        if(state[roomName].players[playerNum - 1].dead) return;
+
+        // Remove mana for using attack
+        state[roomName].players[playerNum - 1].mana = state[roomName].players[playerNum - 1].mana -1;
+
+        if(playerNum === 1) {
+            state[roomName].players[1].hp = state[roomName].players[1].hp - abilityStrength;
+        } else if(playerNum === 2) {
+            state[roomName].players[0].hp = state[roomName].players[0].hp - abilityStrength;
+        }
+
+        // Send the code to the client for debugging
+        client.emit('msg', "Used ability.");
     }
 
     function openNewGame() {
@@ -360,6 +389,7 @@ function createGamestate() {
             moving: moving,
             maxhp: maxPlayerHealth,
             hp: maxPlayerHealth,
+            mana: maxManaPoints,
             dead: gameOver,
             sprite: {
                 frameNum: spriteFrameNum,

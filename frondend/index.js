@@ -44,6 +44,8 @@ function init() {
     c = canvas.getContext('2d');
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
+
+    canvas.addEventListener('click', handleAbilityRequest);
 }
 
 // Get elements from HTML
@@ -101,7 +103,13 @@ function reset() {
     gameCodeInput.value = '';
     homeScreen.style.display = "block";
     gameScreen.style.display = "none";
-  }
+}
+
+function handleAbilityRequest(e) {
+    if(playerNum) {
+        socket.emit('abilityRequest', e, playerNum)
+    }
+}
 
 // This function is used to get the gamestate,
 // and call the function to draw it on screen
