@@ -58,13 +58,22 @@ NGBtn.addEventListener('click', newGame);
 JGBtn.addEventListener('click', joinGame);
 
 // Animated sprite used when
-// the player is moving
+// the player is moving (right)
 var playerImage = new Image();
 playerImage.src = 'assets/playerSprites2.png';
 
-// Image used if the player isn't moving
+// Image used if the player isn't moving (right)
 var stillPlayerImage = new Image();
 stillPlayerImage.src = 'assets/player.png';
+
+// Animated sprite used when
+// the player is moving (left)
+var playerImageL = new Image();
+playerImageL.src = 'assets/playerSprites2L.png';
+
+// Image used if the player isn't moving (left)
+var stillPlayerImageL = new Image();
+stillPlayerImageL.src = 'assets/playerL.png';
 
 // Image for scene
 var background = new Image();
@@ -187,61 +196,6 @@ function draw(state, playerNum) {
     c.drawImage(background, backgroundX + bgWidth, backgroundY + bgHeight, bgWidth, bgHeight);
     c.drawImage(background, backgroundX - bgWidth, backgroundY + bgHeight, bgWidth, bgHeight);
 
-    // Get correct sprite from spritesheet
-    var spritesRow = Math.floor(spriteFrameNum / spriteFramesPerRow);
-    var spritesCol = spriteFrameNum % spriteFramesPerRow;
-    var spriteX = spritesCol * playerImageW;
-    var spriteY = spritesRow * playerImageH;
-
-    // If the player is moving,
-    // use a animated sprite (from spritesheet)
-    if(moving) {
-
-        // Check for player direction, and flip the image the right way
-        if(lookingL) {
-
-            // Flip canvas
-            c.translate(canvasWidth, 0);
-            c.scale(-1, 1);
-            
-            // Put the player onscreen
-            c.drawImage(playerImage, spriteX, spriteY, playerImageW, playerImageH, playerX + 150 - camX, playerY - camY, playerWidth, playerHeight);
-
-            // Remove flip by restoring
-            // the state saved at the start
-            // of the draw function
-            c.restore();
-
-        } else {
-            // Put the player onscreen
-            c.drawImage(playerImage, spriteX, spriteY, playerImageW, playerImageH, playerX - camX, playerY - camY, playerWidth, playerHeight);
-        }
-
-    // If the player isn't moving, just use a still sprite
-    } else {
-
-        // Check for player direction, and flip the image the right way
-        if(lookingL) {
-            
-            // Flip canvas
-            c.translate(canvasWidth, 0);
-            c.scale(-1, 1);
-
-            // Put the player onscreen
-            c.drawImage(stillPlayerImage, playerX + 150 - camX, playerY - camY, playerWidth, playerHeight);
-
-            // Remove flip by restoring
-            // the state saved at the start
-            // of the draw function
-            c.restore();
-
-        } else {
-            // Put the player onscreen
-            c.drawImage(stillPlayerImage, playerX - camX, playerY - camY, playerWidth, playerHeight);
-        }
-        
-    }
-
     // Calculate cords
     var cordX = Math.floor(playerX / 10);
     var cordY = Math.floor(playerY / 10);
@@ -253,6 +207,17 @@ function draw(state, playerNum) {
 
     // Show framenum on the bottom right
     c.fillText(i, 720, 600);
+
+
+    if(playerNum === 0) {
+        // Draw player 1 + 2
+        drawPlayer(state.players[0]);
+        drawPlayerTwo(state.players[1]);
+    } else {
+        drawPlayer(state.players[1]);
+        drawPlayerTwo(state.players[0]);
+    }
+    
 
     // Draw a healthbar
     c.fillStyle = "tomato";
@@ -266,5 +231,101 @@ function draw(state, playerNum) {
         c.fillStyle = 'white';
         c.font = '96px JetBrains Mono';
         c.fillText('G4me 0v3r!', 120, 300);
+    }
+}
+
+function drawPlayer(player) {
+
+    var playerX = player.pos.x;
+    var playerY = player.pos.y;
+    var moving = player.moving;
+    var lookingL = player.looking.l;
+    var camX = player.pos.camX;
+    var camY = player.pos.camY;
+    var spriteFrameNum = player.sprite.frameNum;
+    var spriteFramesPerRow = player.sprite.perRow;
+
+    // Get correct sprite from spritesheet
+    var spritesRow = Math.floor(spriteFrameNum / spriteFramesPerRow);
+    var spritesCol = spriteFrameNum % spriteFramesPerRow;
+    var spriteX = spritesCol * playerImageW;
+    var spriteY = spritesRow * playerImageH;
+
+    // If the player is moving,
+    // use a animated sprite (from spritesheet)
+    if(moving) {
+
+        // Check for player direction, and flip the image the right way
+        if(lookingL) {
+            
+            // Put the player onscreen
+            c.drawImage(playerImageL, spriteX, spriteY, playerImageW, playerImageH, playerX - camX, playerY - camY, playerWidth, playerHeight);
+
+        } else {
+            // Put the player onscreen
+            c.drawImage(playerImage, spriteX, spriteY, playerImageW, playerImageH, playerX - camX, playerY - camY, playerWidth, playerHeight);
+        }
+
+    // If the player isn't moving, just use a still sprite
+    } else {
+
+        // Check for player direction, and flip the image the right way
+        if(lookingL) {
+
+            // Put the player onscreen
+            c.drawImage(stillPlayerImageL, playerX - camX, playerY - camY, playerWidth, playerHeight);
+
+        } else {
+            // Put the player onscreen
+            c.drawImage(stillPlayerImage, playerX - camX, playerY - camY, playerWidth, playerHeight);
+        }
+        
+    }
+}
+
+function drawPlayerTwo(player) {
+
+    var playerX = player.pos.x;
+    var playerY = player.pos.y;
+    var moving = player.moving;
+    var lookingL = player.looking.l;
+    var spriteFrameNum = player.sprite.frameNum;
+    var spriteFramesPerRow = player.sprite.perRow;
+
+    // Get correct sprite from spritesheet
+    var spritesRow = Math.floor(spriteFrameNum / spriteFramesPerRow);
+    var spritesCol = spriteFrameNum % spriteFramesPerRow;
+    var spriteX = spritesCol * playerImageW;
+    var spriteY = spritesRow * playerImageH;
+
+    // If the player is moving,
+    // use a animated sprite (from spritesheet)
+    if(moving) {
+
+        // Check for player direction, and flip the image the right way
+        if(lookingL) {
+
+            // Put the player onscreen
+            c.drawImage(playerImageL, spriteX, spriteY, playerImageW, playerImageH, 12 - camX, -4 - camY, playerWidth, playerHeight);
+
+        } else {
+            // Put the player onscreen
+            c.drawImage(playerImage, spriteX, spriteY, playerImageW, playerImageH, 12 - camX, -4 - camY, playerWidth, playerHeight);
+        }
+
+    // If the player isn't moving, just use a still sprite
+    } else {
+
+        // Check for player direction, and flip the image the right way
+        if(lookingL) {
+
+            // Put the player onscreen
+            c.drawImage(stillPlayerImageL, 12 - camX, -4 - camY, playerWidth, playerHeight);
+
+        } else {
+            // Put the player onscreen
+            c.drawImage(stillPlayerImage, 12 - camX, -4 - camY, playerWidth, playerHeight);
+        }
+        
     }
 }
