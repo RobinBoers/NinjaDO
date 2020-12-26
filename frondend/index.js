@@ -220,8 +220,11 @@ function draw(state, playerNum) {
     drawPlayer(state.players[0], camX, camY);
 
     // Draw a healthbar
-    c.fillStyle = "tomato";
-    c.fillRect(400, 10, playerHealth / maxPlayerHealth *380, 20)
+
+    if(!player.dead) {
+        c.fillStyle = "tomato";
+        c.fillRect(400, 10, playerHealth / maxPlayerHealth *380, 20);
+    }
 
     c.strokeStyle = "black";
     c.strokeRect(400, 10, 380, 20);
