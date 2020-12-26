@@ -97,11 +97,16 @@ window.addEventListener('keydown', onKeydown);
 window.addEventListener('keyup', onKeyup);
 
 function onKeydown(e) {
-    socket.emit('keydown', e.keyCode);
+    console.log(playerNum)
+    if(playerNum) {
+        socket.emit('keydown', e.keyCode, playerNum);
+    }
 }
 
 function onKeyup(e) {
-    socket.emit('keyup', e.keyCode);
+    if(playerNum) {
+        socket.emit('keyup', e.keyCode, playerNum);
+    }
 }
 
 function newGame() {

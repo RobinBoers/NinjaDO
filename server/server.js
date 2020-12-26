@@ -81,8 +81,10 @@ io.on('connection', client => {
     client.on('newGame', openNewGame);
     client.on('joinGame', handleJoinGame);
 
-    function handleKeydown(keyCode) {
+    function handleKeydown(keyCode, playerNum) {
 
+        var roomName = clientRooms[client.id];
+        
         try {
             keyCode = parseInt(keyCode);
         } catch(e) {
@@ -90,16 +92,21 @@ io.on('connection', client => {
             return;
         }
 
-        if(keyCode === upKeyCode) runningU = true;
-        if(keyCode === downKeyCode) runningD = true;
-        if(keyCode === rightKeyCode) runningR = true;
-        if(keyCode === leftKeyCode) runningL = true;
-        if(keyCode === hackKeyCode) hacking = true;
+        if(keyCode === upKeyCode) state[roomName].player.running.U = true;
+        if(keyCode === downKeyCode) state[roomName].player.running.D = true;
+        if(keyCode === rightKeyCode) state[roomName].player.running.R = true;
+        if(keyCode === leftKeyCode) state[roomName].player.running.L = true;
+
+        if(keyCode === hackKeyCode) {
+            state[roomName].player.velocity = superSpeed;
+        }
 
         client.emit('keyCode', keyCode);
     }
 
-    function handleKeyup(keyCode) {
+    function handleKeyup(keyCode, playerNum) {
+
+        var roomName = clientRooms[client.id];
 
         try {
             keyCode = parseInt(keyCode);
@@ -108,10 +115,10 @@ io.on('connection', client => {
             return;
         }
 
-        if(keyCode === upKeyCode) runningU = false;
-        if(keyCode === downKeyCode) runningD = false;
-        if(keyCode === rightKeyCode) runningR = false;
-        if(keyCode === leftKeyCode) runningL = false;
+        if(keyCode === upKeyCode) state[roomName].player.running.U = false;
+        if(keyCode === downKeyCode) state[roomName].player.running.D = false;
+        if(keyCode === rightKeyCode) state[roomName].player.running.R = false;
+        if(keyCode === leftKeyCode) state[roomName].player.running.L = false;
     }
 
     function openNewGame() {
@@ -133,7 +140,7 @@ io.on('connection', client => {
 
         client.emit('msg', "Serverconnection with gamecode: " + roomName);
 
-        // const room = io.sockets.adapter.rooms[JSON.stringify(roomName)];
+        {// const room = io.sockets.adapter.rooms[JSON.stringify(roomName)];
         // client.emit('msg', room);
         // let allUsers;
 
@@ -156,7 +163,9 @@ io.on('connection', client => {
         // } 
 
         // clientRooms[client.id] = roomName;
+        }
 
+        clientRooms[client.id] = roomName;
         client.emit('displayGameCode', roomName);
 
         client.join(roomName);
@@ -174,8 +183,7 @@ function gameLoop(roomName) {
     const gameInterval = setInterval(() => {
 
         // Update the state
-        update();
-        state[roomName] = createGamestate();
+        update(roomName);
 
         // Send the updated state to the
         //  client as a string
@@ -185,43 +193,42 @@ function gameLoop(roomName) {
 
 // UPDATE
 
-function update(state) {
+function update(roomName) {
 
     // Simple frame count
-    i = i+1;
+    state[roomName].frame = state.frame+1;
     frameCounter = frameCounter + 1;
 
-    // Superspeed for hackers
-    // Is triggerd by the ; key
-    if(hacking) {
-        playerSpeed = superSpeed;
+    // Player movement
+    if(state[roomName].player.running.U) { 
+        state[roomName].player.pos.y = state[roomName].player.pos.y - state[roomName].player.velocity; 
     }
-
-    // Update player movement
-    if(runningU) {
-        playerY = playerY - playerSpeed;
+    if(state[roomName].player.running.D) {
+        state[roomName].player.pos.y = state[roomName].player.pos.y + state[roomName].player.velocity;
     }
-    if(runningD) {
-        playerY = playerY + playerSpeed;
+    if(state[roomName].player.running.R) {
+        state[roomName].player.pos.x = state[roomName].player.pos.x + state[roomName].player.velocity;
+        state[roomName].player.looking.r = true;
+        state[roomName].player.looking.l = false;
     }
-    if(runningL) {
-        playerX = playerX - playerSpeed;
-        lookingL = true;
-        lookingR = false;
-    }
-    else if(runningR) {
-        playerX = playerX + playerSpeed;
-        lookingR = true;
-        lookingL = false;
+    if(state[roomName].player.running.L) {
+        state[roomName].player.pos.x = state[roomName].player.pos.x - state[roomName].player.velocity;
+        state[roomName].player.looking.l = true;
+        state[roomName].player.looking.r = false;
     }
 
     // Check if moving, used later to determin image to use
-    if(runningR || runningD || runningL || runningU) moving = true;
-    else moving = false;
+    if( state[roomName].player.running.R || 
+        state[roomName].player.running.D || 
+        state[roomName].player.running.L || 
+        state[roomName].player.running.U) {
+        state[roomName].player.moving = true;
+    }
+    else state[roomName].player.moving = false;
 
     // Update viewport
-    camX = playerX - 300;
-    camY = playerY - 300;
+    state[roomName].player.pos.camX = state[roomName].player.pos.x - 300;
+    state[roomName].player.pos.camY = state[roomName].player.pos.y - 300;
 
     // Update player animation
     if((frameCounter % AnimationSpeed) === 0) {
@@ -232,8 +239,8 @@ function update(state) {
     }
 
     // Check for gameover
-    if(playerHealth <= 0) {
-        gameOver = true;
+    if(state[roomName].player.hp <= 0) {
+        state[roomName].player.dead = true;
     }
 }
 
@@ -254,7 +261,7 @@ function createGamestate() {
             },
             looking: {
                 l: lookingL,
-                r: lookingR
+                r: lookingR,
             },
             velocity: playerSpeed,
             moving: moving,
