@@ -44,7 +44,7 @@ const hackKeyCode = 59;
 const jumpKeyCode = 87;
 
 // Movement speed
-var playerSpeed = 8;
+var playerSpeed = 6;
 const superSpeed = 30;
 
 // Viewport
