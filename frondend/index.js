@@ -21,8 +21,14 @@ socket.on('init', handleInit);
 socket.on('msg', viewMessage);
 socket.on('gamestate', handleState);
 socket.on('displayGameCode', handleGamecode);
-socket.on('unknownGame', () => {console.log("Gamecode incorrect or game unknown.")});
-socket.on('TooManyPlayers', () => {console.log("Too many players.")});
+socket.on('unknownGame', () => {
+    reset();
+    alert("Gamecode incorrect or game unknown.");
+});
+socket.on('TooManyPlayers', () => {
+    reset();
+    alert("Too many players.");
+});
 
 let canvas;
 let c;
@@ -80,6 +86,13 @@ function handleGamecode(code) {
 function viewMessage(message) {
     console.log(message);
 }
+
+function reset() {
+    playerNum = null;
+    gameCodeInput.value = '';
+    homeScreen.style.display = "block";
+    gameScreen.style.display = "none";
+  }
 
 // This function is used to get the gamestate,
 // and call the function to draw it on screen
