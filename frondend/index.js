@@ -232,8 +232,12 @@ function draw(state, playerNum) {
     if(!player.dead) {
         c.fillStyle = "tomato";
         c.fillRect(400, 10, playerHealth / maxPlayerHealth *380, 20);
+    } else {
+        c.fillStyle = "rgba(255, 0, 0, .5)";
+        c.fillRect(0, 0, canvasWidth, canvasHeight);
     }
 
+    // Healthbar outline
     c.strokeStyle = "black";
     c.strokeRect(400, 10, 380, 20);
 
