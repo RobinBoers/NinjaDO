@@ -20,7 +20,7 @@ socket.on('connected', () => {console.log("Connected.")});
 socket.on('init', handleInit);
 socket.on('msg', viewMessage);
 socket.on('gamestate', handleState);
-socket.on('createdGame', handleGamecode);
+socket.on('displayGameCode', handleGamecode);
 socket.on('unknownGame', () => {console.log("Gamecode incorrect or game unknown.")});
 socket.on('TooManyPlayers', () => {console.log("Too many players.")});
 

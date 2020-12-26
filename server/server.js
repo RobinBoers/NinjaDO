@@ -120,7 +120,7 @@ io.on('connection', client => {
         client.emit('msg', "Serverconnection with gamecode: "+roomName);
 
         clientRooms[client.id] = roomName;
-        client.emit('createdGame', roomName);
+        client.emit('displayGameCode', roomName);
 
         state[roomName] = createGamestate();
 
@@ -133,29 +133,31 @@ io.on('connection', client => {
 
         client.emit('msg', "Serverconnection with gamecode: " + roomName);
 
-        const room = io.sockets.adapter.rooms[JSON.stringify(roomName)];
-        client.emit('msg', room);
-        let allUsers;
+        // const room = io.sockets.adapter.rooms[JSON.stringify(roomName)];
+        // client.emit('msg', room);
+        // let allUsers;
 
-        if(room) {
-            allUsers = room.sockets;
-            client.emit('msg', allUsers);
-        }
+        // if(room) {
+        //     allUsers = room.sockets;
+        //     client.emit('msg', allUsers);
+        // }
 
-        let numClients = 0;
-        if(allUsers) {
-            numClients = Object.keys(allUsers).length;
-        }
+        // let numClients = 0;
+        // if(allUsers) {
+        //     numClients = Object.keys(allUsers).length;
+        // }
 
-        if(numClients === 0) {
-            client.emit('unknownGame');
-            return;
-        } else if(numClients > 1) {
-            client.emit('TooManyPlayers');
-            return;
-        } 
+        // if(numClients === 0) {
+        //     client.emit('unknownGame');
+        //     return;
+        // } else if(numClients > 1) {
+        //     client.emit('TooManyPlayers');
+        //     return;
+        // } 
 
-        clientRooms[client.id] = roomName;
+        // clientRooms[client.id] = roomName;
+
+        client.emit('displayGameCode', roomName);
 
         client.join(roomName);
         client.number = 2;
@@ -177,7 +179,7 @@ function gameLoop(roomName) {
 
         // Send the updated state to the
         //  client as a string
-        client.emit('gamestate', JSON.stringify(state[roomName]));
+        io.to(roomName).emit('gamestate', JSON.stringify(state[roomName]));
     }, 1000 / frameRate);
 }
 
