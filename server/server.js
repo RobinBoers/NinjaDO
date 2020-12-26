@@ -51,7 +51,7 @@ const superSpeed = 30;
 const abilityStrength = 4;
 const abilityCooldown = 270;
 const maxManaPoints = 5;
-const manaRegenCooldown = 270; // / 90 for seconds
+const manaRegenCooldown = 540; // devide by 90 for seconds
 var manaFrameCounter = 0;
 
 // Viewport
