@@ -256,7 +256,7 @@ function update(roomName) {
         state[roomName].players[0].running.U) {
         state[roomName].players[0].moving = true;
     }
-    else state[roomName].players[0].moving = false;
+    else (state[roomName].players[0].moving) = false;
 
     // Check if moving, used later to determin image to use (player 2)
     if( state[roomName].players[1].running.R || 
@@ -265,7 +265,7 @@ function update(roomName) {
         state[roomName].players[1].running.U) {
         state[roomName].players[1].moving = true;
     }
-    else state[roomName].players[1].moving = false;
+    else (state[roomName].players[1].moving) = false;
 
     // Update viewport (player 1)
     state[roomName].players[0].pos.camX = state[roomName].players[0].pos.x - 300;
@@ -275,16 +275,13 @@ function update(roomName) {
     state[roomName].players[1].pos.camX = state[roomName].players[1].pos.x - 300;
     state[roomName].players[1].pos.camY = state[roomName].players[1].pos.y - 300;
 
-    // Update player animation (player 1)
+    // Update player animation (player 1 +2)
     if((frameCounter % AnimationSpeed) === 0) {
         state[roomName].players[0].sprite.frameNum = state[roomName].players[0].sprite.frameNum + 1;
         if(state[roomName].players[0].sprite.frameNum >= totalFrames) {
             state[roomName].players[0].sprite.frameNum = 0;
         }
-    }
 
-    // Update player animation (player 2)
-    if((frameCounter % AnimationSpeed) === 0) {
         state[roomName].players[1].sprite.frameNum = state[roomName].players[1].sprite.frameNum + 1;
         if(state[roomName].players[1].sprite.frameNum >= totalFrames) {
             state[roomName].players[1].sprite.frameNum = 0;

@@ -101,7 +101,10 @@ function handleState(state) {
     // Convert string back into valid JSON
     state = JSON.parse(state);
 
-    requestAnimationFrame(() => draw(state));
+    if(playerNum) {
+        requestAnimationFrame(() => draw(state, playerNum));
+    }
+
 }
 
 // USER INPUT
@@ -139,7 +142,7 @@ function joinGame() {
 function draw(state, playerNum) {
 
     // Set correct index for array
-    playerNum = playerNum -1;
+    playerNum = playerNum - 1;
 
     var player = state.players[playerNum];
     var playerX = player.pos.x;
@@ -265,32 +268,3 @@ function draw(state, playerNum) {
         c.fillText('G4me 0v3r!', 120, 300);
     }
 }
-
-// Example gamestate below
-
-// const gameState = {
-// 	player: {
-// 		pos: {
-// 			x: 50,
-//             y: 40,
-//             camX: -250,
-//             camY: -260,
-//         }, 
-//         running: {
-//             U: false,
-//             D: false,
-//             R: true,
-//             L: false,
-//         },
-// 		looking: {
-// 			l: true,
-// 			r: false
-// 		},
-// 		velocity: 10,
-//         moving: false,
-//         maxhp: 20,
-//         hp: 1,
-//         dead: false
-//     },
-//     frame: 0,
-// }
