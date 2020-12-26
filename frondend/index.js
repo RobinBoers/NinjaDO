@@ -20,6 +20,7 @@ socket.on('connected', () => {console.log("Connected.")});
 socket.on('init', handleInit);
 socket.on('msg', viewMessage);
 socket.on('gamestate', handleState);
+socket.on('hurt', handleDamage)
 socket.on('displayGameCode', handleGamecode);
 socket.on('unknownGame', () => {
     reset();
@@ -111,6 +112,10 @@ function handleAbilityRequest(e) {
     }
 }
 
+function handleDamage() {
+    console.log("Damaged.");
+}
+
 // This function is used to get the gamestate,
 // and call the function to draw it on screen
 function handleState(state) {
@@ -182,6 +187,7 @@ function draw(state, playerNum) {
     var animationSpeed = player.sprite.speed;
     var totalFrames = player.sprite.total;
     var spriteFramesPerRow = player.sprite.perRow;
+    var manaCount = player.mana;
 
     // Save the non-flipped state to restore later
     c.save();
@@ -214,13 +220,15 @@ function draw(state, playerNum) {
     c.fillText("x:"+ cordX + ",y:" + cordY, 20, 40);
 
     // Show framenum on the bottom right
-    c.fillText(i, 720, 600);
+    // c.fillText(i, 720, 600);
+
+    // Show mana left on the bottom right
+    c.fillText(manaCount, 720, 600);
 
     drawPlayer(state.players[1], camX, camY);
     drawPlayer(state.players[0], camX, camY);
 
     // Draw a healthbar
-
     if(!player.dead) {
         c.fillStyle = "tomato";
         c.fillRect(400, 10, playerHealth / maxPlayerHealth *380, 20);
