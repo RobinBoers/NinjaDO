@@ -48,8 +48,9 @@ var playerSpeed = 6;
 const superSpeed = 30;
 
 // Abilities
-const abilityStrength = 4;
-const abilityCooldown = 270;
+const abilityStrength = 4; // total hp is 20
+const abilityCooldown = 60; // devide by 90 for seconds
+var abilityTimer = 0;
 const maxManaPoints = 5;
 const manaRegenCooldown = 540; // devide by 90 for seconds
 var manaFrameCounter = 0;
@@ -162,6 +163,10 @@ io.on('connection', client => {
         if(state[roomName].players[playerNum - 1].dead) return;
         if(state[roomName].players[playerNum - 1].mana <= 0) return;
 
+        if(abilityTimer < abilityCooldown) return;
+
+        abilityTimer = 0;
+
         // Remove mana for using attack
         state[roomName].players[playerNum - 1].mana = state[roomName].players[playerNum - 1].mana -1;
 
@@ -260,6 +265,8 @@ function update(roomName) {
     state[roomName].frame = i;
     frameCounter = frameCounter + 1;
     manaFrameCounter = manaFrameCounter + 1;
+
+    abilityTimer = abilityTimer + 1;
 
     // Update mana for both players
     if(manaFrameCounter === manaRegenCooldown) {
