@@ -1,15 +1,15 @@
 // CONSTANTS
 
 // Image sizes
-const pixelSize = 10;
+const pixelSize = 5;
 const sceneColor = '#4aadd4';
 
 const canvasWidth = 800;
 const canvasHeight = 600;
 const bgImageW = 161;
 const bgImageH = 129;
-const playerImageW = 12;
-const playerImageH = 14;
+const playerImageW = 14;
+const playerImageH = 15;
 const bgWidth = bgImageW * pixelSize;
 const bgHeight = bgImageH * pixelSize;
 const playerWidth = playerImageW * pixelSize;
