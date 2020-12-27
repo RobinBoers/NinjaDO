@@ -36,6 +36,7 @@ const gameScreen = document.querySelector('#game');
 const homeScreen = document.querySelector("#home");
 const NGBtn = document.querySelector("#NGBtn");
 const JGBtn = document.querySelector("#JGBtn");
+
 const SBtn = document.querySelector("#SBtn")
 const gameCodeInput = document.getElementById("gameCode");
 const gameCodeDisplay = document.querySelector("#GameCodeDisplay");
@@ -309,4 +310,5 @@ function drawPlayer(player, camX, camY) {
         }
         
     }
+
 }
