@@ -5,9 +5,7 @@ This is just a little personal project of mine.
 
 ## Installation
 
-I'm working on a simple executable file which just works, but for now you needto run it yourself using node.js<br>
-To run the code, make sure you installed node.js<br>
-Then start the server with ```node server.js```.
-After you started the server, you should be able to open the index.html file.
+The game uses a server and a client. You need a server to run it. It should work on your local network. Just download the server file, and run it. It should tell you the IP adress you need to connect to.
+After you started the server, you should be able to open the index.html file. Enter the IP adress, and you are ready to go!
 
 ![screenshot](client/assets/screenshot.png)
