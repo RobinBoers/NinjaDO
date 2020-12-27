@@ -11,6 +11,10 @@ const io = require('socket.io')(http, {
     }
 });
 
+require('dns').lookup(require('os').hostname(), function (err, add, fam) {
+    console.log('Listening on: http://' + add + ":3000");
+  })
+
 const { makeId } = require('./utils');
 
 // CONFIGUARATION & CONSTANTS
@@ -80,6 +84,8 @@ const clientRooms = {};
 
 // Check when a client is connecting
 io.on('connection', client => {
+
+    console.log("Established connection with client.");
 
     client.emit('connected');
 

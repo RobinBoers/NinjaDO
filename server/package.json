@@ -1,6 +1,8 @@
 {
+  "bin": "server.js",
   "dependencies": {
     "cors": "^2.8.5",
+    "os": "^0.1.1",
     "socket.io": "^3.0.4"
   }
 }
