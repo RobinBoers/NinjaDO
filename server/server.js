@@ -36,6 +36,8 @@ var runningR = false;
 var runningD = false;
 var lookingL = false;
 var lookingR = true;
+var lookingU = false;
+var lookingD = false;
 var moving = false;
 var hacking = false;
 
@@ -300,37 +302,61 @@ function update(roomName) {
     // Player movement (for player 1)
     if(state[roomName].players[0].running.U) { 
         state[roomName].players[0].pos.y = state[roomName].players[0].pos.y - state[roomName].players[0].velocity; 
+        state[roomName].players[0].looking.l = false;
+        state[roomName].players[0].looking.r = false;
+        state[roomName].players[0].looking.u = true;
+        state[roomName].players[0].looking.d = false;
     }
     if(state[roomName].players[0].running.D) {
         state[roomName].players[0].pos.y = state[roomName].players[0].pos.y + state[roomName].players[0].velocity;
+        state[roomName].players[0].looking.l = false;
+        state[roomName].players[0].looking.r = false;
+        state[roomName].players[0].looking.u = false;
+        state[roomName].players[0].looking.d = true;
     }
     if(state[roomName].players[0].running.R) {
         state[roomName].players[0].pos.x = state[roomName].players[0].pos.x + state[roomName].players[0].velocity;
         state[roomName].players[0].looking.r = true;
         state[roomName].players[0].looking.l = false;
+        state[roomName].players[0].looking.u = false;
+        state[roomName].players[0].looking.d = false;
     }
     if(state[roomName].players[0].running.L) {
         state[roomName].players[0].pos.x = state[roomName].players[0].pos.x - state[roomName].players[0].velocity;
         state[roomName].players[0].looking.l = true;
         state[roomName].players[0].looking.r = false;
+        state[roomName].players[0].looking.u = false;
+        state[roomName].players[0].looking.d = false;
     }
 
     // Player movement (for player 2)
     if(state[roomName].players[1].running.U) { 
         state[roomName].players[1].pos.y = state[roomName].players[1].pos.y - state[roomName].players[1].velocity; 
+        state[roomName].players[1].looking.l = false;
+        state[roomName].players[1].looking.r = false;
+        state[roomName].players[1].looking.u = true;
+        state[roomName].players[1].looking.d = false;
     }
     if(state[roomName].players[1].running.D) {
         state[roomName].players[1].pos.y = state[roomName].players[1].pos.y + state[roomName].players[1].velocity;
+        state[roomName].players[1].looking.l = false;
+        state[roomName].players[1].looking.r = false;
+        state[roomName].players[1].looking.u = false;
+        state[roomName].players[1].looking.d = true;
     }
     if(state[roomName].players[1].running.R) {
         state[roomName].players[1].pos.x = state[roomName].players[1].pos.x + state[roomName].players[1].velocity;
         state[roomName].players[1].looking.r = true;
         state[roomName].players[1].looking.l = false;
+        state[roomName].players[1].looking.u = false;
+        state[roomName].players[1].looking.d = false;
     }
     if(state[roomName].players[1].running.L) {
         state[roomName].players[1].pos.x = state[roomName].players[1].pos.x - state[roomName].players[1].velocity;
         state[roomName].players[1].looking.l = true;
         state[roomName].players[1].looking.r = false;
+        state[roomName].players[1].looking.u = false;
+        state[roomName].players[1].looking.d = false;
     }
 
     // Check if moving, used later to determin image to use (player 1)
@@ -432,6 +458,8 @@ function createGamestate() {
             looking: {
                 l: lookingL,
                 r: lookingR,
+                u: lookingU,
+                d: lookingD,
             },
             velocity: playerSpeed,
             moving: moving,
