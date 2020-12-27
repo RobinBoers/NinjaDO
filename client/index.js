@@ -249,6 +249,12 @@ function draw(state, playerNum) {
     var backgroundX = - (camX % bgWidth);
     var backgroundY = - (camY % bgHeight);
     c.drawImage(background, backgroundX, backgroundY, bgWidth, bgHeight);
+
+    // Send correct data about background
+    socket.emit("bgConfig", bgWidth, bgHeight);
+
+    // Old crap for endless map
+    // c.drawImage(background, backgroundX, backgroundY, bgWidth, bgHeight);
     // c.drawImage(background, backgroundX + bgWidth, backgroundY, bgWidth, bgHeight);
     // c.drawImage(background, backgroundX - bgWidth, backgroundY, bgWidth, bgHeight);
     // c.drawImage(background, backgroundX, backgroundY - bgHeight, bgWidth, bgHeight);
@@ -307,7 +313,6 @@ function drawPlayer(player, camX, camY) {
     var moving = player.moving;
     var lookingL = player.looking.l;
     var lookingR = player.looking.r;
-    var lookingD = player.looking.d;
     var lookingU = player.looking.u;
     var spriteFrameNum = player.sprite.frameNum;
     var spriteFramesPerRow = player.sprite.perRow;

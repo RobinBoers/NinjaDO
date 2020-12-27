@@ -98,6 +98,21 @@ io.on('connection', client => {
     client.on('newGame', openNewGame);
     client.on('joinGame', handleJoinGame);
 
+    client.on('bgConfig', handleBackground);
+
+    function handleBackground(bgWidth, bgHeight) {
+        endX = bgWidth - 70;
+        endY = bgHeight - 70;
+
+        var roomName = clientRooms[client.id];
+
+        if(!roomName) return;
+
+        // Set correct values in state
+        state[roomName].endX = endX;
+        state[roomName].endY = endY;
+    }
+
     function handleKeydown(keyCode, playerNum) {
 
         // Get roomName from all rooms (by client ID)
@@ -180,6 +195,10 @@ io.on('connection', client => {
 
         // Damage other player
         if(playerNum === 1) {
+
+            // Check if player is already dead
+            if(state[roomName].players[1].dead) return;
+
             // Jump to victim
             state[roomName].players[0].pos.x = state[roomName].players[1].pos.x;
             state[roomName].players[0].pos.y = state[roomName].players[1].pos.y;
@@ -188,6 +207,10 @@ io.on('connection', client => {
             state[roomName].players[1].hp = state[roomName].players[1].hp - abilityStrength;
             state[roomName].players[1].hurt = true;
         } else if(playerNum === 2) {
+
+            // Check if player is already dead
+            if(state[roomName].players[1].dead) return;
+
             // Jump to victim
             state[roomName].players[1].pos.x = state[roomName].players[0].pos.x;
             state[roomName].players[1].pos.y = state[roomName].players[0].pos.y;
@@ -398,6 +421,36 @@ function update(roomName) {
         }
     }
 
+    // Dont let players move out of the map (upper left)
+    if(state[roomName].players[0].pos.x < 0) {
+        state[roomName].players[0].pos.x = 0;
+    }
+    if(state[roomName].players[0].pos.y < 0) {
+        state[roomName].players[0].pos.y = 0;
+    }
+
+    if(state[roomName].players[1].pos.x < 0) {
+        state[roomName].players[1].pos.x = 0;
+    }
+    if(state[roomName].players[1].pos.y < 0) {
+        state[roomName].players[1].pos.y = 0;
+    }
+
+    // Dont let players move out of the map (bottom right)
+    if(state[roomName].players[0].pos.x > state[roomName].endX) {
+        state[roomName].players[0].pos.x = state[roomName].endX;
+    }
+    if(state[roomName].players[0].pos.y > state[roomName].endY) {
+        state[roomName].players[0].pos.y = state[roomName].endY;
+    }
+
+    if(state[roomName].players[1].pos.x > state[roomName].endX) {
+        state[roomName].players[1].pos.x = state[roomName].endX;
+    }
+    if(state[roomName].players[1].pos.y > state[roomName].endY) {
+        state[roomName].players[1].pos.y = state[roomName].endY;
+    }
+
     // Check for gameover (player 1)
     if(state[roomName].players[0].hp <= 0) {
         state[roomName].players[0].dead = true;
@@ -476,6 +529,8 @@ function createGamestate() {
             }
         }],
         frame: i,
+        endX: 100,
+        endY: 100
     }
 }
 
