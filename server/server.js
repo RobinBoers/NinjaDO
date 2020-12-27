@@ -259,7 +259,7 @@ io.on('connection', client => {
 });
 
 // Dispay message in log if client disconnects
-socket.on('disconnect', function(){
+io.on('disconnect', function(){
     console.log("Client disconnected.");
 });
 
