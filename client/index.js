@@ -12,25 +12,6 @@ const playerImageH = 7;
 
 // CONFIGURATION
 
-// Connect to socket.io backend
-const socket = io("http://localhost:3000");
-
-// Socket connection
-socket.on('connected', () => {console.log("Connected.")});
-socket.on('init', handleInit);
-socket.on('msg', viewMessage);
-socket.on('gamestate', handleState);
-socket.on('hurt', handleDamage)
-socket.on('displayGameCode', handleGamecode);
-socket.on('unknownGame', () => {
-    reset();
-    alert("Gamecode incorrect or game unknown.");
-});
-socket.on('TooManyPlayers', () => {
-    reset();
-    alert("Too many players.");
-});
-
 let canvas;
 let c;
 let playerNum;
@@ -50,15 +31,25 @@ function init() {
 }
 
 // Get elements from HTML
+const connectScreen = document.querySelector('#connect');
 const gameScreen = document.querySelector('#game');
 const homeScreen = document.querySelector("#home");
 const NGBtn = document.querySelector("#NGBtn");
 const JGBtn = document.querySelector("#JGBtn");
+
+const SBtn = document.querySelector("#SBtn")
 const gameCodeInput = document.getElementById("gameCode");
 const gameCodeDisplay = document.querySelector("#GameCodeDisplay");
+const serverInput = document.getElementById("serverInput");
 
 NGBtn.addEventListener('click', newGame);
 JGBtn.addEventListener('click', joinGame);
+SBtn.addEventListener('click', configServer);
+
+var serverName = serverInput.value;
+
+// Connect to socket.io backend
+let socket;
 
 // Animated sprite used when
 // the player is moving (right)
@@ -83,6 +74,29 @@ var background = new Image();
 background.src = 'assets/background.png';
 
 // HANDLERS
+
+function configServer() {
+    serverName = serverInput.value;
+    socket = io(serverName);
+
+    connectScreen.style.display = "none";
+
+    // Socket connection
+    socket.on('connected', () => {console.log("Connected.")});
+    socket.on('init', handleInit);
+    socket.on('msg', viewMessage);
+    socket.on('gamestate', handleState);
+    socket.on('hurt', handleDamage)
+    socket.on('displayGameCode', handleGamecode);
+    socket.on('unknownGame', () => {
+        reset();
+        alert("Gamecode incorrect or game unknown.");
+    });
+    socket.on('TooManyPlayers', () => {
+        reset();
+        alert("Too many players.");
+    });
+}
 
 // Used to recieve playernumber / playerID
 function handleInit(num) {
@@ -296,4 +310,5 @@ function drawPlayer(player, camX, camY) {
         }
         
     }
+
 }
