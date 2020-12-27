@@ -4,5 +4,15 @@
     "cors": "^2.8.5",
     "os": "^0.1.1",
     "socket.io": "^3.0.4"
+  },
+  "pkg": {
+    "assets": [
+      "node_modules/**/*",
+      "utils.js"
+    ],
+    "targets": [
+      "node12-macos-x64",
+      "node10-win-x64"
+    ]
   }
 }
