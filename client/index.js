@@ -256,6 +256,10 @@ function draw(state, playerNum) {
     // c.drawImage(background, backgroundX + bgWidth, backgroundY + bgHeight, bgWidth, bgHeight);
     // c.drawImage(background, backgroundX - bgWidth, backgroundY + bgHeight, bgWidth, bgHeight);
 
+    // Draw players
+    drawPlayer(state.players[1], camX, camY);
+    drawPlayer(state.players[0], camX, camY);
+
     // Calculate cords
     var cordX = Math.floor(playerX / 10);
     var cordY = Math.floor(playerY / 10);
@@ -270,9 +274,6 @@ function draw(state, playerNum) {
 
     // Show mana left on the bottom right
     c.fillText(manaCount, 720, 600);
-
-    drawPlayer(state.players[1], camX, camY);
-    drawPlayer(state.players[0], camX, camY);
 
     // Draw a healthbar
     if(!player.dead) {
