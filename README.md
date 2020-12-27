@@ -10,8 +10,8 @@ After you started the server, you should be able to open the index.html file. En
 
 ### Singleplayer version
 
-I started this project with a singleplayer version. It is much simpeler, and lives in the [singleplayer branch](https://github.com/RobinBoers/NinjaDO/tree/singleplayer).<br>
-It doesn't require installation at all, because it doesn't need a server.<br>
+I started this project with a singleplayer version. It is much simpeler, and lives in the [singleplayer branch](https://github.com/RobinBoers/NinjaDO/tree/singleplayer).  
+It doesn't require installation at all, because it doesn't need a server.  
 You can just play it [in your browser](https://code.geheimesite.nl/beta/NinjaDO/singleplayer/)! There is not much to do tough...
 
 ![screenshot](client/assets/screenshot2.png)
