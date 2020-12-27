@@ -14,4 +14,4 @@ I started this project with a singleplayer version. It is much simpeler, and liv
 It doesn't require installation at all, because it doesn't need a server.<br>
 You can just play it [in your browser](https://code.geheimesite.nl/beta/NinjaDO/singleplayer/)! There is not much to do tough...
 
-![screenshot](client/assets/screenshot.png)
+![screenshot](client/assets/screenshot2.png)
