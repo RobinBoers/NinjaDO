@@ -86,7 +86,7 @@ stillPlayerImageL.src = 'assets/player/left.png';
 
 // Image used if the player isn't moving (front)
 var stillPlayerImageF = new Image();
-stillPlayerImageF.src = 'assets/player/front.png';
+stillPlayerImageF.src = 'assets/player/default.png';
 
 // Image used if the player isn't moving (back)
 var stillPlayerImageB = new Image();
@@ -94,7 +94,7 @@ stillPlayerImageB.src = 'assets/player/back.png';
 
 // Image for scene
 var background = new Image();
-background.src = 'assets/background.png';
+background.src = sceneImage;
 
 // HANDLERS
 
@@ -331,14 +331,14 @@ function drawPlayer(player, camX, camY) {
             // Put the player onscreen
             c.drawImage(playerImageB, spriteX, spriteY, playerImageW, playerImageH, playerX - camX, playerY - camY, playerWidth, playerHeight);
 
-        } else if(lookingD) {
+        } else if(lookingR) {
 
             // Put the player onscreen
-            c.drawImage(playerImageF, spriteX, spriteY, playerImageW, playerImageH, playerX - camX, playerY - camY, playerWidth, playerHeight);
+            c.drawImage(playerImage, spriteX, spriteY, playerImageW, playerImageH, playerX - camX, playerY - camY, playerWidth, playerHeight);
 
         } else {
             // Put the player onscreen
-            c.drawImage(playerImage, spriteX, spriteY, playerImageW, playerImageH, playerX - camX, playerY - camY, playerWidth, playerHeight);
+            c.drawImage(playerImageF, spriteX, spriteY, playerImageW, playerImageH, playerX - camX, playerY - camY, playerWidth, playerHeight);
         }
 
     // If the player isn't moving, just use a still sprite
@@ -355,14 +355,14 @@ function drawPlayer(player, camX, camY) {
             // Put the player onscreen
             c.drawImage(stillPlayerImageB, playerX - camX, playerY - camY, playerWidth, playerHeight);
 
-        } else if(lookingD) {
+        } else if(lookingR) {
 
             // Put the player onscreen
-            c.drawImage(stillPlayerImageF, playerX - camX, playerY - camY, playerWidth, playerHeight);
+            c.drawImage(stillPlayerImage, playerX - camX, playerY - camY, playerWidth, playerHeight);
 
         } else {
             // Put the player onscreen
-            c.drawImage(stillPlayerImage, playerX - camX, playerY - camY, playerWidth, playerHeight);
+            c.drawImage(stillPlayerImageF, playerX - camX, playerY - camY, playerWidth, playerHeight);
         }
         
     }
