@@ -258,6 +258,11 @@ io.on('connection', client => {
     
 });
 
+// Dispay message in log if client disconnects
+socket.on('disconnect', function(){
+    console.log("Client disconnected.");
+});
+
 // GAME LOOP
 
 function gameLoop(roomName) {
