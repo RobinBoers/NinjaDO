@@ -1,9 +1,11 @@
 // CONSTANTS
 
-// Image sizes
+// Scene details
 const pixelSize = 5;
 const sceneColor = '#4aadd4';
+const sceneImage = "assets/scenes/blank.png";
 
+// Image sizes
 const canvasWidth = 800;
 const canvasHeight = 600;
 const bgImageW = 161;
@@ -78,7 +80,7 @@ playerImageB.src = 'assets/player/running_back.png';
 
 // Image used if the player isn't moving (right)
 var stillPlayerImage = new Image();
-stillPlayerImage.src = 'assets/player/default.png';
+stillPlayerImage.src = 'assets/player/right.png';
 
 // Image used if the player isn't moving (left)
 var stillPlayerImageL = new Image();
