@@ -10,4 +10,4 @@ To run the code, make sure you installed node.js<br>
 Then start the server with ```node server.js```.
 After you started the server, you should be able to open the index.html file.
 
-![screenshot](assets/screenshot.png)
+![screenshot](client/assets/screenshot.png)
