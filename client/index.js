@@ -146,6 +146,13 @@ function viewMessage(message) {
 function initGame() {
     var audio = new Audio(theme);
     audio.play();
+
+    audio.loop = true;
+
+    audio.addEventListener('ended', function() {
+        this.currentTime = 0;
+        this.play();
+    }, false);
 }
 
 function reset() {
