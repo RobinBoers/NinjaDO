@@ -282,8 +282,13 @@ function draw(state, playerNum) {
     // c.drawImage(background, backgroundX - bgWidth, backgroundY + bgHeight, bgWidth, bgHeight);
 
     // Draw players
-    drawPlayer(state.players[1], camX, camY);
-    drawPlayer(state.players[0], camX, camY);
+    if(playerNum === 0) {
+        drawPlayer(state.players[1], camX, camY);
+        drawPlayer(state.players[0], camX, camY);
+    } else {
+        drawPlayer(state.players[0], camX, camY);
+        drawPlayer(state.players[1], camX, camY);
+    }
 
     // Calculate cords
     var cordX = Math.floor(playerX / 10);
