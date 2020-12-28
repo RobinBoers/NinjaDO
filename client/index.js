@@ -4,6 +4,7 @@
 const pixelSize = 5;
 const sceneColor = '#4aadd4';
 const sceneImage = "assets/scenes/blank.png";
+const theme = "assets/music/theme-1.ogg"
 
 // Image sizes
 const canvasWidth = 800;
@@ -124,6 +125,7 @@ function configServer() {
         reset();
         alert("Too many players.");
     });
+    socket.on('start', initGame);
 }
 
 // Used to recieve playernumber / playerID
@@ -139,6 +141,11 @@ function handleGamecode(code) {
 
 function viewMessage(message) {
     console.log(message);
+}
+
+function initGame() {
+    var audio = new Audio(theme);
+    audio.play();
 }
 
 function reset() {

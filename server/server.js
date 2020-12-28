@@ -297,7 +297,11 @@ io.on('connection', client => {
         client.number = 2;
         client.emit('init', 2);
 
+        // Start gameloop
         gameLoop(roomName);
+
+        // Send client message to start the game (music etc.)
+        io.to(roomName).emit('start');
     }
     
 });
