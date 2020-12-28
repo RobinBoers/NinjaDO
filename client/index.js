@@ -316,8 +316,6 @@ function draw(state, playerNum) {
 
 function drawPlayer(player, camX, camY) {
 
-    if(player.dead) return;
-
     var playerX = player.pos.x;
     var playerY = player.pos.y;
     var moving = player.moving;
