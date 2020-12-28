@@ -94,6 +94,9 @@ stillPlayerImageF.src = 'assets/player/default.png';
 var stillPlayerImageB = new Image();
 stillPlayerImageB.src = 'assets/player/back.png';
 
+var deadPlayerImage = new Image();
+deadPlayerImage.src = 'assets/player/dead.png';
+
 // Image for scene
 var background = new Image();
 background.src = sceneImage;
@@ -316,6 +319,7 @@ function drawPlayer(player, camX, camY) {
     var lookingU = player.looking.u;
     var spriteFrameNum = player.sprite.frameNum;
     var spriteFramesPerRow = player.sprite.perRow;
+    var dead = player.dead;
 
     // Get correct sprite from spritesheet
     var spritesRow = Math.floor(spriteFrameNum / spriteFramesPerRow);
@@ -323,9 +327,16 @@ function drawPlayer(player, camX, camY) {
     var spriteX = spritesCol * playerImageW;
     var spriteY = spritesRow * playerImageH;
 
+    // If the player is dead, draw a dead body
+    if(dead) {
+
+        // Put the player onscreen
+        c.drawImage(deadPlayerImage, playerX - camX, playerY - camY, playerWidth, playerHeight);
+    }
+
     // If the player is moving,
     // use a animated sprite (from spritesheet)
-    if(moving) {
+    else if(moving) {
 
         // Check for player direction, and flip the image the right way
         if(lookingL) {
