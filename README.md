@@ -20,3 +20,5 @@ You can just play it [in your browser](https://code.geheimesite.nl/beta/NinjaDO/
 
 I used [these](https://github.com/sparklinlabs/superpowers-asset-packs/tree/master/ninja-adventure) great assets from [Superpowers](http://superpowers-html5.com/), and I reallt like them. If you need any good assets for your project, be sure to check it out!  
 I also want to thank [this CoderDojo Nano book](https://www.amazon.com/CoderDojo-Nano-Make-Your-Create/dp/1338157574) for bringing me the original idea, and helping me learn Javascript in the first place.
+
+![Screenshot](screenshot.png)
