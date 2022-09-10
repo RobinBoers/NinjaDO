@@ -32,7 +32,7 @@ for (var dev in ifaces) {
 }
 
 // Print the result
-console.log("Listening on: http://" + address + ":3000"); 
+console.log("Listening on: http://" + address + ":4000"); 
 
 const { makeId } = require('./utils');
 
@@ -557,5 +557,5 @@ function createGamestate() {
     }
 }
 
-// Listen on port 3000
-http.listen(3000);
+// Listen on port 4000
+http.listen(4000);
